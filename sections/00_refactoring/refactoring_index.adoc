@@ -19,52 +19,19 @@ Introduction
 [%notitle]
 == Introduction
 
-Refactoring et Agilité
-
-Pas de fête sans gâteaux !
-
-== Que faisons nous quand nous développons ?
-
-[%step]
-* Réponse à un besoin humain
-** Pas de besoin, pas de projet !
-* Traduction
-** Des concepts humains => code exécutable par un ordinateur
-** Du code exécuté => concepts manipulables par des humains
-* Plusieurs traductions, plusieurs univers
-** Client(e), Architecte, Développeuse et Développeur, Fonctionnel, Technique, Management 
-* Traduire, c'est trahir
-** Des univers aux fondamentaux différents
-
-=== Comment s'assurer que nous développons bien ?
-
-[.left-column-2-3]
---
-* Notion de Qualité Logicielle
-** Ensemble de caractéristiques attendues
-** https://en.wikipedia.org/wiki/ISO/IEC_9126[Norme Qualité Logicielle ISO 9126^]
-* Capacité fonctionnelle 
-** _Est-ce que le logiciel répond aux besoins fonctionnels exprimés ?_
-* Maintenabilité
-** _Est-ce que le logiciel requiert peu d'effort à son évolution par rapport aux nouveaux besoins ?_
---
-
-[.right-column-1-3]
---
-[.right]
-image::images/ISO_9126_quality_(en).png[width=90%]
-[.x-small] 
-https://commons.wikimedia.org/wiki/File:ISO_9126_quality_(en).svg
---
+Introduction au refactoring
 
 [.center]
-=== Maîtriser la complexité
+
+[.center]
+[%notitle]
+=== C'est pas simple
+Développer, c'est pas simple !
 
 [.center]
 image::images/complexity.gif[role=half-size]
 
-
-ifdef::mode_slide[=== Maîtriser la complexité]
+=== Complexité
 
 ****
 * Complexité vs Complication ?
@@ -72,13 +39,14 @@ ifdef::mode_slide[=== Maîtriser la complexité]
 ** *_Compliqué_* s'oppose à *_facile_* => *_difficile_*.
 ****
 
-[%step]
-* Complexité du projet
-** Besoins humains, Outils techniques
+* Complexité de la traduction 
+** Besoins humains => code informatique
+** _Traduire, c'est trahir_
 * La complexité engendre la complexité
+** Complexité des outils techniques
 ** Problème humain complexe => code complexe
 * Développement => activité complexe peut devenir vite très compliquée
-** Beaucoup d'éléments & d'aspects à prendre en compte
+** Beaucoup (trop) d'éléments & d'aspects à prendre en compte
  
 [NOTE.notes]
 --
@@ -98,8 +66,8 @@ ifdef::mode_slide[]
 === Complexité
 endif::mode_slide[]
 
-Développer un logiciel, {cr}
-c'est aussi garder la complexité {cr}
+Réussir à développer un logiciel, {cr}
+c'est (aussi) garder la complexité {cr}
 **sous contrôle** 
 
 
@@ -110,11 +78,11 @@ c'est aussi garder la complexité {cr}
 * Réponse à la complexité
 ** Expériences passées submergées par la complexité
 ** Nouvelle façon de définir et atteindre la capacité fonctionnelle
-* Adopter une démarche itérative et incrémentale
+* Adopter une démarche _itérative_ et _incrémentale_
 ** Ajouts de fonctionnalité successifs 
 ** Feedback rapide du client
 ** Ne pas prétendre à l'exhaustivité 
-** Se donner le droit de découvrir et changer
+** Se donner le droit de découvrir et **changer**
 --
 
 [.right-column-1-3]
@@ -128,24 +96,28 @@ ifdef::mode_slide[]
 endif::mode_slide[]
 
 * Sur le plan purement technique
-** Conception (_Software Design_) toujours en évolution
+** Conception (_Software Design_) **toujours en évolution**
 ** Une recherche de l'excellence technique
 * Sur le plan management 
 ** Avoir confiance dans les personnes en charge du développement.
 ** Une remise en cause et une adaptation permanente
 ** Un rythme de travail **soutenable**
 
+[%step]
+[.center]
+*****
+Faire évoluer un logiciel à un rythme **soutenable** => garantir maintenabilité
+*****
 
 == Maintenabilité
 
 Mesure de la facilité
 
-[%step]
+
 [.left-column]
 * Faciliter la *compréhension*
 * Faciliter l'*analyse*
 
-[%step]
 [.right-column]
 * Faciliter la *modification*
 * Faciliter les *tests*
@@ -153,12 +125,15 @@ Mesure de la facilité
 
 [%step]
 [.reset-column]
+[.center]
+*****
 Faire évoluer un logiciel à un rythme **soutenable** => garantir maintenabilité
 
-[%step]
-[.center]
 \... à condition de ne pas être trop *endetté*.
+*****
 
+[.splash.background]
+[.center]
 [NOTE.notes]
 --
 * Faciliter la compréhension
@@ -180,20 +155,8 @@ Faire évoluer un logiciel à un rythme **soutenable** => garantir maintenabilit
 ** Les *exécuter* le plus fréquemment possible.
 --
 
+
 == Dette technique
-
-[%step]
-* Choisir, c'est regretter
-** Développer => choix à court termes
-*** Contraintes de temps et de budget
-*** Personnes/compétences/expertises disponibles
-* Choix à court terme => entropie naturelle
-** => Compromis, maladresses, manques de clairvoyances, renoncements
-** => Compréhension ou conception obsolète ou incomplète
-
-
-ifdef::mode_slide[=== Dette technique]
-
 [.center]
 image::images/dette_technique.png[]
 
@@ -201,6 +164,16 @@ image::images/dette_technique.png[]
 --
 Au cours d'un développement, il est naturel que des compromis, des maladresses ou des raccourcis soient commis. Cela fait parfois gagner du temps ou des ressources, parfois cela est du à un manque de clairvoyance ou plus simplement à une vision de la conception qui n'était pas la plus pertinente mais qui pénalisent la maintenabilité de l'application et sa faculté à évoluer.
 --
+
+ifdef::mode_slide[=== Dette technique]
+
+* Choisir, c'est regretter
+** Développer => choix à court termes
+*** Contraintes de temps et de budget
+*** Personnes/compétences/expertises disponibles
+* Choix à court terme => entropie naturelle
+** => Compromis, maladresses, manques de clairvoyances, renoncements
+** => Compréhension ou conception obsolète ou incomplète
 
 ifdef::mode_slide[=== Dette technique]
 
@@ -214,47 +187,57 @@ ifdef::mode_slide[=== Dette technique]
 image:images/dette-technique_1.svg[alt]
 image:images/dette-technique_2.svg[alt]
 
-=== Dette technique > Appréciation
+// === Dette technique > Appréciation
 
-* Toutes les dettes ne se valent pas
-** Choix assumé pour se développer
-** Descente aux enfer par méconnaissance 
-** => Deux axes d'évaluation
+// * Toutes les dettes ne se valent pas
+// ** Choix assumé pour se développer
+// ** Descente aux enfer par méconnaissance 
+// ** => Deux axes d'évaluation
 
 
-[.left-column]
---
-* Réfléchie
-** Limitation  
-*** A une partie isolée du code ou généralisée
-** Prudence
-*** Aspect marginal ou au coeur de l'application 
+// [.left-column]
+// --
+// * Réfléchie
+// ** Limitation  
+// *** A une partie isolée du code ou généralisée
+// ** Prudence
+// *** Aspect marginal ou au coeur de l'application 
 
---
-[.right-column]
---
+// --
+// [.right-column]
+// --
 
-* Volontaire
-** En connaissance de cause
-*** Conscience et compétence 
-*** ... ou absence des deux
-** Recul
-*** Réflexion sur ce qu'il aurait possible de _mieux_ faire
---
+// * Volontaire
+// ** En connaissance de cause
+// *** Conscience et compétence 
+// *** ... ou absence des deux
+// ** Recul
+// *** Réflexion sur ce qu'il aurait possible de _mieux_ faire
+// --
 
 === Dette technique > Appréciation
 
 [.center]
 image:images/dette-technique-quadrant.svg[]
 
-[%step]
-Ne pas en faire un sujet de honte
-
-[%step]
-Nécessité d'en avoir conscience et de la résorber
-
 [NOTE.notes]
 --
+* Toutes les dettes ne se valent pas
+** Choix assumé pour se développer
+** Descente aux enfer par méconnaissance 
+** => Deux axes d'évaluation
+* Réfléchie
+** Limitation  
+*** A une partie isolée du code ou généralisée
+** Prudence
+*** Aspect marginal ou au coeur de l'application 
+* Volontaire
+** En connaissance de cause
+*** Conscience et compétence 
+*** ... ou absence des deux
+** Recul
+*** Réflexion sur ce qu'il aurait possible de _mieux_ faire
+
 
 Recommandations de lecture 
 
@@ -265,7 +248,6 @@ https://wikiagile.fr/index.php?title=Quadrant_de_la_Dette_Technique
 
 === Dette technique > Mesure 
 
-[%step]
 * Écart aux bonnes pratiques
 * Bonnes pratiques
 ** Heuristiques propres à chaque écosystème
@@ -282,7 +264,6 @@ https://wikiagile.fr/index.php?title=Quadrant_de_la_Dette_Technique
 Les moteurs d'analyse qualité sont des outils très puissants, le plus connu étant sonarqube. Mais il n'est pas forcément nécessaire d'utiliser, encore moins de mettre en oeuvre, un tel système pour avoir une idée des écarts manifestes et corrigeables. Des linters suffisent.
 --
 
-include::sonarqube.adoc[{include_options}]
 
 [.splash.background]
 [.center]
@@ -655,7 +636,6 @@ def compute_invoice(shipment, order, discount):
 
 === Approche personnelle biaisée
 
-[%step]
 * Le refactoring => ensemble de techniques et d'habitudes, 
 ** qui vont des plus simples aux plus complexes
 * Je suis de culture _Java_
@@ -665,6 +645,7 @@ def compute_invoice(shipment, order, discount):
 * Je considérais certaines comme insignifiantes
 ** => jusqu'à la lecture du livre de M. Fowler
 
+[%step]
 *Je recommande de les parcourir toutes et de lire la motivation derrière : elle est souvent très légitime*
 
 [.splash.background]
