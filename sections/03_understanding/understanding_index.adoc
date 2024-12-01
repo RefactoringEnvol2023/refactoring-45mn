@@ -1,0 +1,123 @@
+= Understanding
+ifdef::backend-revealjs[]
+include::../../_inc_revealjs.adoc[]
+endif::[]
+ifndef::backend-revealjs[]
+:toc:
+endif::[]
+include::../../_inc_context.adoc[]
+ifndef::imagesdir[]
+:imagesdir: ../
+endif::[]
+// tag::content[]
+
+
+
+[.start.background]
+[.center]
+== Améliorer la compréhension
+
+Refactoring, niveau élémentaire.
+
+ifdef::mode_slide[=== Améliorer la compréhension]
+
+* Lisibilité
+* Structuration
+
+[NOTE.notes]
+--
+Travailler sur la compréhension revient à travailler sur l'objet code en tant que texte.
+Le code est un ensemble de mots qui font sens, pour l'humain et pour la machine.
+
+C'est le premier niveau de refactorisation, accessible à tous, et ne demandant que peu de temps et d'expertise.
+--
+
+[.subsection.background]
+[.center]
+[%notitle]
+ifdef::mode_slide[== Rendre le code lisible]
+
+[.huge]#Rendre le code lisible#
+
+ifdef::mode_slide[== Rendre le code lisible]
+
+[.ppt]
+* Comme tout écrit, le code dit quelque chose.
+** Il dit ce qu'il fait (*_WHAT_*) et comment (*_HOW_*) il le fait.
+** Encore faut-il que ce soit lisible...
+
+[.fragment.ppt]
+* Laisser le code raconter son histoire
+** Plus il est **auto-explicatif**, plus il est **facile** à comprendre.
+** Plus il demande d'efforts à lire, moins il est maintenable
+
+
+ifdef::mode_slide[]
+[%notitle]
+== Rendre le code lisible
+endif::mode_slide[]
+
+[.huge.center]
+Vous *lisez* votre code +
+10 fois plus +
+que vous ne l'*écrivez*.
+
+[.fragment.ppt]
+* Vous l'écrivez *une fois*, mais vous le lisez
+** pour _vérifier_ qu'il est valide,
+** pour _comprendre_ ce qu'il fait,
+** pour vous _rappeler_ où vous en êtes,
+** pour le _recopier_ dans un autre code,
+
+[.fragment]
+* et pour le **réécrire**.
+
+== Rendre le code lisible 
+
+* Donner des *bons* noms aux éléments du code 
+** Les choses n'existent pour notre cerveau que si elles ont un nom qui lui parle.
+* Diviser en petits paragraphes ciblés
+** Pour garder le cerveau focalisé et éviter qu'il ne se perde dans les détails.
+
+include::code_is_text_naming.adoc[{include_options}]
+
+include::code_well_targeted.adoc[{include_options}]
+
+include::code_typing.adoc[{include_options}]
+
+include::code_logical_expression.adoc[{include_options}]
+
+include::understanding_bad_smells.adoc[]
+
+[.end.background]
+[.center]
+== Améliorer la compréhension
+
+Nous avons vu
+
+* Rendre le code lisible
+** Nommage
+** Montrer les intentions avant les implémentations
+** Expliciter les attentes
+** Les imbrications
+* Bad smells de comprehension
+** Nom Mystérieux
+** Fonction trop longue
+** Longue liste de paramètres
+
+== Exercice
+
+[.simple]
+* Se mettre par deux
+* Cloner le projet https://github.com/RefactoringEnvol2023/01_understanding_exercice.git
+* Créer un environnement virtuel
+** `python -m venv .venv --prompt "exo01`
+* Activez le 
+** Linux/MacOS => `source .venv/bin/activate`
+** Windows => `.venv/Script/Active.ps1`
+*** En cas de problème : `Set-ExecutionPolicy Unrestricted -Scope Process`
+* Vérifier que vous êtes sur la branche `RAW`
+* **Installer les dépendances** `pip install -e .[dev]`
+* Dans un shell lancer la commande `ptw --now tests`
+* Lire le README.md
+// end::content[]

@@ -1,0 +1,131 @@
+= Typage
+include::../../_inc_context.adoc[]
+ifndef::imagesdir[]
+:imagesdir: ../
+endif::[]
+
+// tag::content[]
+== Expliciter les attentes
+
+* Signature
+** Ensemble d'éléments qui identifient un traitement
+*** Nom
+*** Paramètres
+*** Type de retour
+
+Exemple en java
+
+[{code_size}]
+[source,java,attributes]
+----
+public Travel getTravel(Profile p, Enterprise e)
+----
+
+En python 
+
+[{code_size}]
+[source,python,attributes]
+----
+def get_travel(profile, enterprise): ...
+----
+
+=== Le problème Python
+
+* C'est vous le compilateur
+** Pas de coercition, pas de compilation poussée
+** Vérification au runtime
+*** Surprise à la fin => `Attribute error: foo has no attribute named bar`
+* => Charge mentale importante
+** Connaissance 
+*** des arguments possibles
+*** des vérifications (ou pas)
+
+
+[{code_size}]
+[source,python,attributes]
+----
+get_travel(Profile(id=125), Enterprise(id=987))
+----
+
+
+[{code_size}]
+[source,python,attributes]
+----
+get_travel("John", "ACME")
+----
+
+
+=== Python, utiliser les types hints
+
+Syntaxe
+[{code_size}]
+[source,python,attributes]
+----
+object: Type
+----
+
+Typage des arguments
+
+[{code_size}]
+[source,python,attributes]
+----
+def get_travel(profile: Profile, enterprise: Enterprise): 
+    ...
+----
+
+
+Typage du retour
+
+[{code_size}]
+[source,python,attributes]
+----
+def get_travel(profile: Profile, enterprise: Enterprise) -> Travel: 
+    ...
+----
+
+=== Package Typings
+
+Liste
+
+[{code_size}]
+[source,python,attributes]
+-----
+from typings import List
+events: List[Event] = []
+-----
+
+Dictionnaire
+
+
+[{code_size}]
+[source,python,attributes]
+-----
+from typings import Dict
+categories_by_name: Dict[str, Category] = {}
+-----
+
+Plus de détails
+
+https://realpython.com/python-type-checking/
+
+Depuis 3.10, on peut utiliser les types natifs
+
+[.left-column]
+--
+[source,python,attributes]
+-----
+from typings import List
+List[Something]
+-----
+--
+
+[.left-column]
+--
+[source,python,attributes]
+-----
+# from typings import List
+list[Something]
+-----
+--
+
+// end::content[]

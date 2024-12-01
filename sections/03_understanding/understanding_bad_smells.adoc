@@ -1,0 +1,146 @@
+
+== Bad smells de comprehension
+
+* Nom Mystérieux
+* Fonction trop longue
+* Longue liste de paramètres
+
+== Nom Mystérieux
+
+* Symptôme
+** Nom incompréhensible, imprononçable
+* Techniques
+** `Rename Method`
+** Renommage de variable, de classe, de tout ce qui est nécessaire de renommer
+
+== Fonction trop longue
+
+* Symptôme
+** Obligé de scroller plus d'un écran pour parcourir une méthode
+** Être perdu en la lisant
+** Transgression des principes de _Code Clean_ 
+*** Longueur fonction de l'ordre de la dizaine de lignes
+* Techniques
+** `Extract Method`
+** Mettre en avant ce qui est important
+** Déplacer les détails dans des sous fonctions
+
+== Longue liste de paramètres
+
+* Symptômes
+** Trop de paramètres
+** Impossible de percevoir une structure
+** Impossible de voir ce qui est important ou optionnel
+** Impossible de distinguer le ou les sujets du traitement
+* Techniques
+** `Introduce Parameter Object`
+** `Preserve Whole Object`
+
+=== Longue liste de paramètres > Introduce Parameter Object
+
+[.left-column]
+--
+[{code_size}]
+[source,python,attributes]
+----
+def move(weight: float,
+        speed: float,
+        x_position: float,
+        y_position: float,
+        consumption_coef: float,
+        battery_capacity: float,
+        battery_level: float,
+        x_destination: float,
+        y_destination: float,
+        required_speed: float)
+----
+--
+
+[.right-column]
+--
+[{code_size}]
+[source,python,attributes]
+----
+@dataclass
+class Position:
+    x: float
+    y: float
+
+@dataclass
+class Engine:
+    consumption_coef: float,
+
+@dataclass    
+class Battery:
+    battery_capacity: float
+    battery_level: float
+
+----
+
+[{code_size}]
+[source,python,attributes]
+----
+def move(weight: float,
+        speed: float,
+        position: Position,
+        engine: Engine,
+        battery: Battery
+        destination: Position,
+        required_speed: float)
+----
+--
+
+=== Longue liste de paramètres > Preserve Whole Object
+
+[.left-column]
+--
+[{code_size}]
+[source,python,attributes]
+----
+def move(weight: float,
+        speed: float,
+        position: Position,
+        consumption_coef: float,
+        battery_capacity: float,
+        battery_level: float,
+        destination: Position,
+        required_speed: float)
+----
+--
+
+[.right-column]
+--
+[{code_size}]
+[source,python,attributes]
+----
+@dataclass
+class Position:
+    x: float
+    y: float
+
+@dataclass
+class Engine:
+    consumption_coef: float,
+
+@dataclass    
+class Battery:
+    battery_capacity: float
+    battery_level: float
+
+@dataclass
+class Rover:
+    weight: float
+    speed: float
+    position: Position
+    engine: Engine
+    battery: Battery
+----
+
+[{code_size}]
+[source,python,attributes]
+----
+def move(rover: Rover, 
+        destination: Position,
+        required_speed: float)
+----
+--

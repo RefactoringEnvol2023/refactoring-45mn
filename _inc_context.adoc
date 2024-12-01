@@ -1,0 +1,56 @@
+:!mode_html:
+:!mode_book:
+:!mode_pdf:
+:!mode_slide:
+:cr:
+ifdef::backend-revealjs[]
+:mode_slide: slide
+:mode: slide
+endif::[]
+ifdef::backend-pdf[]
+:mode_pdf: pdf
+:mode_book: book
+:mode: book, pdf
+endif::[]
+ifdef::backend-html5[]
+:mode_html: html
+endif::[]
+ifeval::["{backend}" == "webview-html5"]
+:mode_html: html
+endif::[]
+ifdef::mode_html[]
+:mode_book: book
+:mode: book, html
+endif::[]
+ifndef::source-highlighter[]
+:source-highlighter: coderay
+endif::[]
+:experimental:
+:icons: font
+:!start_definition_block:
+:!end_definition_block:
+ifdef::mode_book[]
+:start_definition_block: 
+:end_definition_block:
+endif::[]
+ifdef::mode_book[]
+:include_options: leveloffset=+1,tag=content
+:code_size: .normal
+endif::[]
+ifdef::mode_slide[]
+:include_options: tag=content
+:code_size: .big
+endif::[]
+ifdef::mode_slide[]
+:cr: + 
+:!sectnums:
+endif::[]
+ifdef::mode_book[]
+:cr: 
+:sectnums:
+:numbered:
+endif::[]
+ifdef::hide_debug[{mode}]
+//ifdef::mode_slide[MODE SLIDE]
+//ifdef::mode_html[MODE HTML]
+

@@ -1,0 +1,329 @@
+= Test par surcharge
+include::../../_inc_context.adoc[]
+ifndef::imagesdir[]
+:imagesdir: ../../
+endif::[]
+
+// tag::content[]
+
+
+== Testing par surcharge
+
+[.simple]
+* Nouvelles règles pour `RadioCommunicator` 
+** Evolution de  `Channel` => évolution de `RadioCommunicator`
+
+[.smaller.center]
+====
+**SI** `Channel` _ouvert_ **ET** _écrivable_  
+**ALORS** _envoyer un message_ {cr}
+**SINON** mettre message _en liste d'attente_.
+====
+
+[.center]
+**Alerte : responsabilités !!**
+
+
+ifdef::mode_slide[== Testing par surcharge]
+
+[{code_size}][{code_size}]
+[source,python,attributes]
+-----
+class RadioCommunicator(Communicator):
+
+    def __init__(self, transmitter: RadioTransmitter):
+        self.transmitter: RadioTransmitter = transmitter
+
+    def send(msg: Message) -> None: 
+        if not self.check_compliance_with_very_complicated_rules(msg):
+            return
+        #----*--*----*--*----*--*----*--*----*--*----*--*----*--*----
+        channel: Channel = self.transmitter.get_channel()
+        if channel.is_open() and channel.is_writable():     # <--- New rule !
+            channel.write(Message.to_base68(msg))
+            channel.close()
+        else:
+            self.pending_messages.append(msg)
+        #----*--*----*--*----*--*----*--*----*--*----*--*----*--*----
+-----
+
+
+ifdef::mode_slide[== Testing par surcharge]
+
+Une classe a une méthode très difficile à tester car elle a des dépendances irritantes
+
+[.center]
+image::images/testability-hierarchy-slide-test_0.svg[]
+
+ifdef::mode_slide[== Testing par surcharge]
+
+**(1)** Isoler, dans la méthode, les éléments irritants
+
+[.center]
+image::images/testability-hierarchy-slide-test_1.svg[]
+
+ifdef::mode_slide[== Testing par surcharge]
+
+**(2)** Extraire les éléments irritants dans une méthode dédiée `very_hard(...)`
+
+[.center]
+image::images/testability-hierarchy-slide-test_2.svg[]
+
+ifdef::mode_slide[== Testing par surcharge]
+
+**(3.a)** Dériver (faire hériter) une classe de test {cr}
+**(3.b)** Rendre inoffensive la méthode `very_hard(...)` en la **surchargeant** {cr}
+**(3.c)** Simuler son comportement à fin de tester le **reste** de la classe
+
+[.center]
+image::images/testability-hierarchy-slide-test_3.svg[]
+
+== ! 
+
+* Étape 1
+** `Extract Method`
+*** `_write_to_channel(Message)`
+
+
+[{code_size}]
+[source,python,attributes]
+-----
+class RadioCommunicator(Communicator):
+
+    #...
+
+    def send(msg: Message) -> None: 
+        if not self.check_compliance_with_very_complicated_rules(msg):
+            return
+
+        if not self._write_to_channel(msg)  
+            self.pending_messages.append(msg)
+
+    #----*--*----*--*----*--*----*--*----*--*----*--*----*--*----
+    def _write_to_channel(self, mgs: Message):
+        channel: Channel = self.transmitter.get_channel()
+        if channel.is_open() and channel.is_writable():
+            channel.write(Message.to_base68(msg))
+            channel.close()
+            return True
+        return False
+    #----*--*----*--*----*--*----*--*----*--*----*--*----*--*----
+-----
+
+== ! 
+
+* Étape 2
+** Création classe de test en **héritant** de la classe à tester
+** Surcharge de  `_write_to_channel` pour la rendre inoffensive 
+*** <= **problématique**, **hors responsabilité**
+[{code_size}]
+[source,python,attributes]
+-----
+class ForTestRadioCommunicator(RadioCommunicator):
+
+    def __init__(self, channel_is_open: bool, channel_is_writable: bool):
+        super().__init__(None, None)
+        self.channel_is_open = channel_is_open
+        self.channel_is_writable = channel_is_writable
+
+    #----*--*----*--*----*--*----*--*----*--*----*--*----*--*----
+    def _write_to_channel(self, mgs: Message):
+        return self.channel_is_open and self.channel_is_writable
+    #----*--*----*--*----*--*----*--*----*--*----*--*----*--*----
+-----
+
+[NOTE.notes]
+--
+Nous surchargeons la méthode problématique `_write_to_channel` car elle est difficile à simuler et surtout elle est hors responsabilité.
+
+Ce problème relève de l'expertise très spécifique `Transmission par canaux`, pas `Communication générale des message`
+--
+
+[{code_size}]
+[source,python,attributes]
+----
+def test_send_message():
+    # Given
+    communicator = ForTestRadioCommunicator(transmitter=fake_transmitter)
+    message = Message(id=123, content=f'CONTACT server=nowhere.com')
+
+    # When
+    communicator.send(message)
+
+    # Then
+    assert message in communicator.pending_messages
+
+----
+
+
+== Test par sous-classage
+
+Autre possibilité: 
+
+**(1)** Extraire une classe abstraite, moins spécialisée {cr}
+**(2)** Rendre la méthode `very_hard(...)` _abstraite_ (à créer)
+
+
+[.center]
+image::images/testability-hierarchy-slide-test_4.svg[]
+
+=== Test par sous-classage
+
+**(3.a)** Dériver (faire hériter) une classe de test _de la classe abstraite_ {cr}
+**(3.b)** Rendre inoffensive la méthode `very_hard(...)` {cr}
+**(3.c)** Simuler son comportement à fin de tester le **reste** de la classe
+
+[.center]
+image::images/testability-hierarchy-slide-test_5.svg[]
+
+
+ifdef::mode_slide[=== Test par sous-classage]
+
+[{code_size}]
+[source,python,attributes]
+----
+class GitlabIssueDispatcher:
+
+    def __init__(self, gitlab: Gitlab):
+        self.gitlab = gitlab
+
+    def dispatch(self, issues: List[Issue]):
+        self.deduplicate_issues(issues)
+        self.balance_issues_per_assignee(issues)
+        self.create_issues_in_tracking_system(issues)
+
+    def deduplicate_issues(self, issues: List[Issue]) -> None:
+        # Do something
+    def balance_issues_per_assignee(self, issues: List[Issue]) -> None:
+        # Do something
+
+    #----*--*----*--*----*--*----*--*----*--*----*--*----*--*----
+    def convert_to_tracking_system(self, issue: Issue) -> Any:
+        # Do something
+
+    def create_issues_in_tracking_system(self, issues : List[Issue]) -> None:
+        for issue in self.issues:
+            project_id = issue.project_id
+            project = self.gitlab.projects.get(id=project_id)
+            project.issues.create(self.convert_to_tracking_system(issue))
+    #----*--*----*--*----*--*----*--*----*--*----*--*----*--*----
+
+
+----
+
+ifdef::mode_slide[=== Test par sous-classage]
+
+Nous voulons tester l'enchaînement des étapes.
+Le test serait plus facile à faire si on se débarrassait de la dépendance à la librairie `python-gitlab` non ?
+
+* Étapes
+** `Extract class` `GitlabIssueDispatcher` -> `IssueDispatcher`
+** Laisser la méthode ou les méthodes  problématiques non définies et abstraites
+
+ifdef::mode_slide[=== Test par sous-classage]
+
+
+[{code_size}]
+[source,python,attributes]
+----
+class IssueDispatcher(ABC):
+
+    def __init__(self):
+
+    def dispatch(self, issues: List[Issue]):
+        self.deduplicate_issues(issues)
+        self.balance_issues_per_assignee(issues)
+        self.create_issues_in_tracking_system(issues)
+
+    def deduplicate_issues(self, issues: List[Issue]) -> None:
+        # Do something
+    def balance_issues_per_assignee(self, issues: List[Issue]) -> None:
+        # Do something
+
+    #----*--*----*--*----*--*----*--*----*--*----*--*----*--*----
+    @abstractmethod
+    def convert_to_tracking_system(self, issue: Issue) -> Any:
+        pass
+
+    @abstractmethod
+    def create_issues_in_tracking_system(self, issues : List[Issue]) -> None:
+        pass
+    #----*--*----*--*----*--*----*--*----*--*----*--*----*--*----
+
+----
+
+ifdef::mode_slide[=== Test par sous-classage]
+
+[{code_size}]
+[source,python,attributes]
+----
+class GitlabIssueDispatcher(IssueDispatcher):
+
+    def __init__(self, file_path: Path, gitlab: Gitlab):
+        super().__init__(file_path)
+        self.gitlab = gitlab
+
+    #----*--*----*--*----*--*----*--*----*--*----*--*----*--*----
+    def convert_to_tracking_system(self, issue: Issue) -> Any:
+        # Do something
+
+    def create_issues_in_tracking_system(self, issues : List[Issue]) -> None:
+        for issue in self.issues:
+            project_id = issue.project_id
+            project = self.gitlab.projects.get(id=project_id)
+            project.issues.create(self.convert_to_tracking_system(issue))    
+    #----*--*----*--*----*--*----*--*----*--*----*--*----*--*----
+----
+
+ifdef::mode_slide[=== Test par sous-classage]
+
+[{code_size}]
+[source,python,attributes]
+----
+class ForTestIssueDispatcher(IssueDispatcher):
+    def __init__(self, file_path):
+        super().__init__(file_path)
+
+    #----*--*----*--*----*--*----*--*----*--*----*--*----*--*----
+    def convert_to_tracking_system(self, issue: Issue) -> Any:
+        # Don't care
+        pass
+
+    def create_issues_in_tracking_system(self, issues : List[Issue]) -> None:
+        # Don't care    
+        pass
+    #----*--*----*--*----*--*----*--*----*--*----*--*----*--*----
+----
+
+ifdef::mode_slide[=== Test par sous-classage]
+[{code_size}]
+[source,python,attributes]
+----
+def test_issue_dispatcher()
+    # Given
+    dispatcher = ForTestIssueDispatcher()
+    issues = [Issue(id=i, assignee=j) for i in range(5) for j in range(5)]
+    
+    # When
+    dispatcher.dispatch(issues)
+
+    # Then 
+    assert ... # some assertions
+----
+
+ifdef::mode_slide[=== Test par sous-classage]
+
+Avantages: adaptation potentielle à plusieurs fournisseurs
+[{code_size}]
+[source,python,attributes]
+----
+class GitlabIssueDispatcher(IssueDispatcher): ...
+
+class GithubIssueDispatcher(IssueDispatcher): ...
+
+class JiraIssueDispatcher(IssueDispatcher): ...
+    
+----
+
+
+// end::content[]

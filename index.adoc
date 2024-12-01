@@ -1,0 +1,116 @@
+= Refactoring et Agilité
+ifdef::backend-revealjs[]
+include::_inc_revealjs.adoc[]
+endif::[]
+ifndef::backend-revealjs[]
+:toc: left 
+:toc-title: Table des matières
+:toclevels: 4
+:doctype: book
+endif::[]
+include::_inc_context.adoc[]
+:print-detail: true
+:print-timing: true
+:ROLE: notes
+ifndef::imagesdir[]
+:imagesdir: ./
+endif::[]
+
+
+Journée Agile 2024
+
+
+[.small.right]
+--
+marc.dexet@ias.u-psud.fr
+
+image::https://mirrors.creativecommons.org/presskit/buttons/88x31/png/by-nc.png[width=200] 
+
+Licence https://creativecommons.org/licenses/by-nc/4.0/deed.fr[CC by-nc 4.0]
+--
+
+== Plan
+
+[.simple]
+* Introduction au refactoring
+* Bref rappel sur le test
+* Voyage à l'intérieur du cerveau
+* Améliorer la compréhension
+* Améliorer la conception
+* Améliorer la testabilité
+
+== Introduction au refactoring
+
+[.simple]
+* **=> Introduction au refactoring**
+* Bref rappel sur le test
+* Voyage à l'intérieur du cerveau
+* Améliorer la compréhension
+* Améliorer la conception
+* Améliorer la testabilité
+
+include::./sections/00_refactoring/refactoring_index.adoc[{include_options}]
+
+== Bref rappel sur le test
+
+[.simple]
+* Introduction au refactoring
+* **=> Bref rappel sur le test**
+* Voyage à l'intérieur du cerveau
+* Améliorer la compréhension
+* Améliorer la conception
+* Améliorer la testabilité
+
+include::./sections/01_tests/tests_index.adoc[{include_options}]
+
+== Voyage à l'intérieur du cerveau
+
+[.simple]
+* Introduction au refactoring
+* Bref rappel sur le test
+* **=> Voyage à l'intérieur du cerveau**
+* Améliorer la compréhension
+* Améliorer la conception
+* Améliorer la testabilité
+
+include::./sections/02_brain/brain_index.adoc[{include_options}]
+
+
+== Améliorer la compréhension
+
+[.simple]
+* Introduction au refactoring
+* Bref rappel sur le test
+* Voyage à l'intérieur du cerveau
+* **=> Améliorer la compréhension**
+* Améliorer la conception
+* Améliorer la testabilité
+
+include::./sections/03_understanding/understanding_index.adoc[{include_options}]
+
+== Améliorer la conception
+
+[.simple]
+* Introduction au refactoring
+* Bref rappel sur le test
+* Voyage à l'intérieur du cerveau
+* Améliorer la compréhension
+* **=> Améliorer la conception**
+* Améliorer la testabilité
+
+include::./sections/04_conception/conception_index.adoc[{include_options}]
+
+== Améliorer la testabilité
+
+[.simple]
+* Introduction au refactoring
+* Bref rappel sur le test
+* Voyage à l'intérieur du cerveau
+* Améliorer la compréhension
+* Améliorer la conception
+* **=> Améliorer la testabilité**
+
+include::./sections/05_testability/testability_index.adoc[{include_options}]
+
+include::./sections/06_conclusion/conclusion_index.adoc[{include_options}]
+

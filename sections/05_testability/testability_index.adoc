@@ -1,0 +1,2022 @@
+= Testabilité
+ifdef::backend-revealjs[]
+include::../../_inc_revealjs.adoc[]
+endif::[]
+ifndef::backend-revealjs[]
+:toc:
+endif::[]
+include::../../_inc_context.adoc[]
+ifndef::imagesdir[]
+:imagesdir: ../../
+endif::[]
+
+// tag::content[]
+
+
+[.start.background]
+[.center]
+== Améliorer la testabilité
+
+
+=== L'immobilisation par la peur
+
+* La peur de tout casser.
+** => Premier frein au changement
+
+image::images/break_everything.gif[]
+
+Aucune évolution n'est possible, à un rythme _soutenable_ sans confiance.
+
+
+== La pierre philosophale
+
+[quote, Kent Beck]
+____
+Tests are the Programmer's stone, transmuting fear into boredom.
+____
+
+=== Definition de la Testabilité
+
+[quote]
+____
+La testabilité d'un module est la facilité à créer une série de tests automatisés.
+____
+
+* Qualité Logicielle
+** Une des caractéristiques de la _Maintenabilité_
+
+== L'échec comme premier pas.
+
+Dans la philosophe des tests, l'échec n'est pas négatif, c'est sa persistence qu'il l'est éventuellement.
+
+L'échec indique qu'un état souhaité n'est pas atteint. L'objectif est de l'atteindre
+
+=== Cycle de vie > Développement Normal
+
+
+[.center]
+image::images/pytest-lifecycle.png[]
+
+=== Cycle de vie > Bug fix
+
+[.center]
+image::images/pytest-bugfix-lifecycle.png[]
+
+=== Le TDD et refactoring
+
+* _Test Driven Development_
+** Approche érigée en philosophie
+
+
+[quote,Kent Beck]
+____
+"Code that isn't tested doesn't work - this seems to be the safe assumption."
+____
+
+ifdef::mode_slide[=== Le TDD et refactoring]
+
+[.center]
+image::images/pytest-tdd-lifecycle.png[]
+
+=== Testabilité, conception et confiance
+
+[.left-column]
+[.center]
+--
+Cercle vertueux
+
+image::images/testability-cercle-vertueux.svg[]
+
+--
+
+[%step]
+[.right-column]
+[.center]
+--
+Cercle vicieux
+
+image::images/testability-cercle-vicieux.svg[]
+--
+
+[%step]
+[.reset-column.center]
+--
+[quote]
+____
+"Réalisez les projets avec des personnes motivées. Fournissez-leur l'environnement et le soutien dont elles ont besoin et _faites-leur confiance_ pour atteindre les objectifs fixés."
+____
+--
+
+[NOTE.notes]
+--
+Il y a une relation très claire entre la conception, la testabilité et la confiance que nous plaçons dans le code.
+Cette confiance agit directement sur notre motivation, notre engagement sur le projet lui-même.
+
+La motivation est un principe très fort dans l'agilité. L'un de ces principes n'est-il pas ?
+
+____
+Réalisez les projets avec des personnes motivées. Fournissez-leur l'environnement et le soutien dont elles ont besoin et _faites-leur confiance_ pour atteindre les objectifs fixés.
+____
+--
+
+=== Les tests comme bac à sable 
+
+
+
+* Tester pour mieux cerner
+** Contexte fonctionnel pour prototyper
+** Jouer avec un algorithme sans lancer la grosse machinerie
+* Démarche
+** (1) Créer un test unitaire
+** (2) Tâtonner avec un algorithme
+** (3) Réussir à passer le test 
+** (4) => Refactoriser l'algorithme en _beau_ code bien _clean_
+* TDD à la petite semaine
+** Pythoneux: alternative au notebook _pour voir_
+
+[NOTE.notes]
+--
+Les test sont un merveilleux moyen d'expérimenter des algorithmes sans avoir à lancer des processus ou des traitements très lourds.
+Il arrive, quand on développe des pipelines de traitements de donnée, d'avoir à relancer de lourds traitement pour tester des algorithmes.
+Le fait de mettre en place des tests, même grossièrement, oblige à penser plus petit, plus réduit, plus concentré.
+Une fois le cadre en place, il devient plaisant, dans un cadre simple, répétitif, sans risque de bidouiller un peu pour voir comment prendre un problème en main.
+--
+
+ifdef::mode_slide[]
+[.at-top-right]
+--
+[.right]
+image::images/stitch.gif[]
+--
+endif::[]
+
+=== La testabilité et qualité de conception
+____
+"if an airplane looks good, it will fly good."
+____
+
+[.center]
+image::images/15_Supermarine_Spitfire_R6923,_QJ-S_(15836050395).jpg[]
+
+____
+Si un code se teste facilement, il ne peut pas être entièrement mauvais...
+____
+
+
+[NOTE.notes]
+--
+Ce n'est pas une réalité statistique, mais c'est motivant.
+--
+
+=== La testabilité et qualité de conception
+
+* Testabilité = indicateur de qualité de conception
+** Un code difficile à tester -> Faiblesses de conception
+** => Revoir la conception 
+* La réciproque est-elle vraie ?
+** Débat...
+
+
+== Test facile
+
+Une simple fonction à tester
+
+[{code_size}]
+[source,python,attributes]
+-----
+def filter_info_log(logs: List[Log]) -> List[Log]:
+    return [log for log in logs if log.level == "INFO"]
+-----
+
+[.left-column]
+--
+
+[{code_size}]
+[source,python,attributes]
+-----
+def test_filter_info_log_empty():
+    # Given
+    logs = []
+
+    # When
+    result = filter_info_log(logs)
+
+    # Then
+    assert result == []
+-----
+--
+
+
+[.right-column]
+--
+[{code_size}]
+[source,python,attributes]
+-----
+def test_filter_info_log_no_info_logs():
+    # Given
+    logs = [Log(level="ERROR")]
+
+    # When
+    result = filter_info_log(logs)
+
+    # Then
+    assert result == []
+-----
+--
+
+=== Test moins facile
+
+Un filtre plus élaboré avec des règles
+[{code_size}]
+[source,python,attributes]
+-----
+class LogFilter:
+    def __init__(self, rules: Rules):
+        self.rules = rules
+    
+    def filter_info_log(self, logs: List[Log]) -> List[Log]:
+        return [log for log in logs if self.rules.validate(log, "INFOS")]
+-----
+
+[.left-column]
+--
+[{code_size}]
+[source,python,attributes]
+-----
+def test_filter_info_log_empty():
+    # Given
+    logs = []
+    rules = Rules()
+    log_filter = LogFilter(rules)
+
+    # When
+    result = log_filter.filter_info_log(logs)
+
+    # Then
+    assert result == []
+-----
+--
+
+
+[.right-column]
+--
+[{code_size}]
+[source,python,attributes]
+-----
+def test_filter_info_log_no_info_logs():
+    # Given
+    logs = [Log(level="ERROR")]
+    rules = Rules()
+    log_filter = LogFilter(rules)
+
+    # When
+    result = log_filter.filter_info_log(logs)
+
+    # Then
+    assert result == []
+-----
+--
+
+
+
+=== Test franchement pas facile
+
+Un filtre avec des règles chargées depuis une base de données
+[{code_size}]
+[source,python,attributes]
+-----
+class LogFilter:
+    def __init__(self, rules: Rules):
+        self.rules = rules
+    ...
+
+class Rules:
+    def __init__(self, db_name: str, db_host: str, db_login: str, db_password: str):
+        self. conn = psycopg2.connect(database = db_name, 
+                                        user = db_login, 
+                                        host= db_host,
+                                        password = db_password)
+
+        self.load_rules(self.conn)
+-----
+
+[.left-column]
+--
+[{code_size}]
+[source,python,attributes]
+-----
+def test_filter_info_log_empty():
+    # Given
+    conn = psycopg2.connect(database = TEST_DATABASE, 
+                            user = TEST_USER, 
+                            host= TEST_HOST,
+                            password = TEST_PASSWORD,
+                            port = 5432)
+    clear_then_load_rules_in_database(conn)
+
+    logs = []
+    rules = Rules(conn)
+    log_filter = LogFilter(rules)
+
+    # When
+    result = log_filter.filter_info_log(logs)
+
+    # Then
+    assert result == []
+-----
+--
+
+
+[.right-column]
+--
+[{code_size}]
+[source,python,attributes]
+-----
+def test_filter_info_log_no_info_logs():
+    # Given
+    conn = psycopg2.connect(database = TEST_DATABASE, 
+                            user = TEST_USER, 
+                            host= TEST_HOST,
+                            password = TEST_PASSWORD,
+                            port = 5432)
+    clear_then_load_rules_in_database(conn)
+
+    logs = [Log(level="ERROR")]
+    rules = Rules(conn)
+    log_filter = LogFilter(rules)
+
+    # When
+    result = log_filter.filter_info_log(logs)
+
+    # Then
+    assert result == []
+-----
+--
+
+=== Facilité et couplage
+
+[.left-column]
+--
+[%step]
+* Coupable couplage
+** Mise en condition => beaucoup de travail
+*** => Instanciation de nombreux objets
+*** => Beaucoup de préoccupation différentes 
+* Objectifs de la refactorisation
+** => Découpler au maximum
+*** Conception _propre_ <= Réduction dette
+** => Se libérer des dépendances
+*** Plusieurs stratégies selon contexte
+--
+
+[.right-column]
+--
+[%step]
+* Action préventives 
+** => Nouveau code  -> nouveau test
+* Action correctives
+** => Legacy code -> Euh, une autre histoire
+--
+
+
+
+=== Mocking
+
+[.left-column-2-3]
+--
+[%step]
+* Situation complexe => Mocking
+** Mock => objet simulé qui **imite** le comportement d'objets réels de manière _contrôlée_.
+** Outil très puissants et utiles
+*** Simuler un composant 
+*** Espionner les appels à un composant
+*** Création d'un objet virtuel uniquement pour les tests
+
+* Outil pas toujours simples
+** _Quand même mocker devient compliqué_ => Sérieux problème de conception.
+--
+
+[.right-column-1-3]
+--
+[.right]
+image::https://media.giphy.com/media/C3YUQjB5agrdK/giphy.gif[]
+--
+
+[.black.background]
+[.center]
+=== Mocking > Harry PotDeFleur
+
+Trop facile de se sortir d'une mauvaise situation par mauvaise conception.
+
+[.center]
+image::images/harrypotter.jpg[]
+
+
+
+
+== Mocking Python en 30 secondes
+
+* Simple illustration 
+** Python `unittest.mock.Mock`
+* Pour plus de détails
+** Mockito pour java https://site.mockito.org/
+** Mocking avec Pytest https://github.com/Euclid-Python/Python-pytest/blob/master/pytest-mock.ipynb[Euclid-Python/Python-pytest^]
+
+
+=== Mock > The Callable Box
+
+[.center]
+**Mock, la boîte à invocations**
+
+Un `Mock` est une _fonction_ qui renvoie _toujours_ un autre `Mock`.
+
+[.left-column]
+--
+[{code_size}]
+[source,python,attributes]
+-----
+mock = Mock()
+
+foo = mock.foo()
+
+assert isinstance(foo(), Mock)
+-----
+--
+
+[.right-column]
+--
+[{code_size}]
+[source,python,attributes]
+-----
+mock = Mock()
+
+result = mock.n().o().p().q().r().s().some_method()
+
+assert isinstance(result, Mock)
+-----
+--
+
+=== Mock > return_value et side_effect
+
+* Simulation des valeurs à renvoyer
+
+* `return_value` 
+** => valeur _unique_ à renvoyer pour tout appel
+
+[{code_size}]
+[source,python,attributes]
+-----
+mock = Mock()
+
+mock.some_method.return_value = 'A'
+
+assert [mock.some_method() for _ in range(3)] == ['A', 'A', 'A']
+-----
+
+* `side_effect` 
+** => Séquence de valeurs à associer à une séquence d'appels
+
+[{code_size}]
+[source,python,attributes]
+-----
+mock = Mock()
+
+mock.some_method.side_effect = 'A', 'B', 'C'
+
+assert [mock.some_method() for _ in range(3)] == ['A', 'B', 'C']
+-----
+
+
+=== Mock > The Recording Box
+
+[.center]
+**Mock, la boîte à enregistrer**
+
+Espionner les appels de méthodes
+
+--
+[{code_size}]
+[source,python,attributes]
+-----
+mock = Mock()
+mock.some_method.return_value = 'foo'
+
+mock.some_method()
+mock.some_method.assert_called_once() # <-- assert been called one time
+
+mock.some_method()
+assert mock.some_method.call_count == 2 # <-- assert been called two times
+-----
+--
+
+Plusieurs possibilités 
+--
+[{code_size}]
+-----
+assert_any_call
+assert_called
+assert_called_once
+assert_called_once_with
+assert_called_with
+assert_has_calls
+assert_not_called
+attach_mock
+call_args
+call_args_list
+call_count
+called
+-----
+--
+
+Voir la documentation 
+[.smaller]#https://docs.python.org/3/library/unittest.mock.html#
+
+
+[.black.background]
+[.center]
+== Legacy
+
+image::images/wikipedia_Bennett_College,_Millbrook_NY.jpg[]
+
+[%step]
+* Le mur de la réalité
+
+[.center]
+=== Legacy
+
+****
+Code ancien, au fonctionnement mystérieux, dont l’évolution semble délicate.
+****
+
+
+[%step]
+--
+****
+_Code que vous n'êtes pas prêt à modifier_
+****
+--
+
+== Legacy et testabilité
+
+[quote,Michael C. Feathers]
+____
+Code without tests is **bad** code. {cr}
+
+It doesn't matter how well written it is; {cr}
+it doesn't matter how pretty {cr}
+or object-oriented or well-encapsulated it is. 
+
+**With tests, we can change ** {cr}
+the behavior of our code quickly and verifiably. 
+
+**Without them, we really don't know ** {cr}
+if our code is getting better or worse.
+____
+
+=== Le cercle infernale
+
+[.center]
+image::images/testability-cercle.svg[alt]
+
+=== Obstacles à la testabilité
+
+[.center]
+****
+Obstacles aux tests _unitaires_
+****
+
+[%step]
+* Dépendances trop lourdes ou complexes
+** Base de données, Web Services extérieurs, Librairies tierces
+** _Science_ => Équipement, Carte électronique, Instrument
+** Arbre de dépendances trop profond
+* Tests non idempotents 
+** Liées au temps, gestion asynchrone, randomisation
+* Absence d'observable
+** Pas de changement d'état, pas de retour, pas de son, pas d'image
+
+
+[NOTE.notes]
+--
+* La mise en oeuvre demande des ressources considérables qui vont au delà des moyen du développeur
+** Monter une base de données, un site extérieur
+* Les tests ne sont pas répétables car ils dépendent de choses qui sont trop fluctuantes
+** Heure, propriétés système, randomisation
+* Je ne peux rien observer, aucun moyen de savoir si il s'est passée quelque chose.
+--
+
+=== Chirurgie de guerre 
+
+[%step]
+* Tester coûte que coûte
+** => Renoncer temporairement à un idéal de conception
+** => Constater la conservation des comportements
+* Tout est autorisé ou presque
+** Mettre une variable témoin 
+** Transgresser les principes de conception
+
+[%step]
+****
+Ce qui compte est de savoir ce que fait **réellement** le code, avant de l'améliorer
+****
+
+=== Test de caractérisation 
+
+* Prendre un cliché du comportement actuel
+* Test par approbation
+** Test _extérieur_ 
+** Comparaison avec un résultat **approuvé** conservé sous forme de **fichier**
+** Fichier qui peut être _fourni_ par la cliente ou le client !!
+* Référence 
+
+[.center]
+--
+https://approvaltests.com/[https://approvaltests.com/^]
+
+****
+Given -> When -> Then -> Verify
+****
+--
+
+ifdef::mode_slide[=== Test de caractérisation > Exemple]
+
+[.center]
+image::images/testability-approval.svg[]
+
+ifdef::mode_slide[=== Test de caractérisation > Exemple]
+
+[.left-column]
+--
+[{code_size}]
+[source,python,attributes]
+----
+@dataclass
+class City:
+    name: str
+
+
+@dataclass
+class Address:
+    street: str
+    city: City
+
+----
+--
+
+[.right-column]
+--
+[{code_size}]
+[source,python,attributes]
+----
+@dataclass
+class Person:
+    name: str
+    age: int
+    address: Optional[Address] = None
+    knows: List[Person] = field(default_factory=list)
+
+    def add_relation(self, relation: Person):
+        self.knows.append(relation)
+
+
+
+@dataclass
+class Family:
+    name: str
+    members: List[Person] = field(default_factory=list)
+----
+--
+
+[.reset-column]
+--
+[{code_size}]
+[source,python,attributes]
+----
+def find_related_people_in_same_cities(families: List[Family]):
+    people_relations_by_cities = {}
+    for family in families:
+        for people in family.members:
+            if people.knows:
+                city_name = people.address.city.name
+                relations = people_relations_by_cities.get(city_name)
+                if not relations:
+                    relations = []
+                    people_relations_by_cities[city_name] = relations
+                relations.append(people)
+    return people_relations_by_cities
+----
+--
+
+ifdef::mode_slide[=== Test de caractérisation > Exemple]
+
+Test avec approval
+
+[{code_size}]
+[source,python,attributes]
+----
+from approvaltests.approvals import verify
+
+def test_approval():
+    # ___ GIVEN ____
+    city = City(name='Sample City')
+
+    alice = Person(name='Alice', age=25, address=Address(street='123 Street A', city=city))
+    bob = Person(name='Bob', age=30, address=Address(street='456 Street B', city=city))
+    family1 = Family(name='Smith', members=[alice, bob])
+    charlie = Person(name='Charlie', age=28, address=Address(street='789 Street C', city=city))
+    family2 = Family(name='Johnson', members=[charlie])
+
+    alice.knows.append(charlie)
+
+    # ___ WHEN ____
+    related_people = find_related_people_in_same_cities([family1, family2])
+
+    # ___ THEN ____
+    verify(related_people)
+----
+
+
+
+
+ifdef::mode_slide[=== Test de caractérisation > Exemple]
+
+
+Lancement avec 
+
+[{code_size}]
+[source,bash]
+----
+pytest --approvaltests-use-reporter='PythonNativeReporter'
+----
+
+Dans `Pycharm`
+
+[.center]
+image:images/capture_approval_1.png[]
+
+
+ifdef::mode_slide[=== Test de caractérisation > Exemple]
+
+Sortie du test en échec
+
+[source,text]
+----
+to approve this result:
+
+move "/home/mdexet/approval_demo/tests/test_prettyworld.test_approval.received.txt" 
+ "/home/mdexet/approval_demo/tests/test_prettyworld.test_approval.approved.txt"
+
+...
+code>       verify(related_people)
+E       approvaltests.approval_exception.ApprovalException: Approval Mismatch, received != approved
+E       	Approved: /home/mdexet/approval_demo/tests/test_prettyworld.test_approval.approved.txt
+E       	Received: /home/mdexet/approval_demo/tests/test_prettyworld.test_approval.received.txt
+----
+
+Dans PyCharm
+
+[.center]
+image:images/capture_approval_0.png[width=500] 
+
+
+
+ifdef::mode_slide[=== Test de caractérisation > Exemple]
+
+Contenu du fichier de référence `test_prettyworld.test_approval.approved.txt`
+
+[{code_size}]
+[source,text]
+----
+{'Sample City': [Person(name='Alice', age=25, address=Address(street='123 Street A', city=City(name='Sample City')), 
+  knows=[Person(name='Charlie', age=28, address=Address(street='789 Street C', city=City(name='Sample City')), knows=[])])]}
+----
+
+
+ifdef::mode_slide[=== Test de caractérisation > Exemple]
+
+Dès que le fichier est copié, le test est validé.
+En cas de déviation, que ce passe-t-il ?
+
+[{code_size}]
+[source,text]
+----
+
+tests\test_prettyworld.py:24: ApprovalException
+-------------------------------- Captured stdout call --------------------------------- 
+--- test_prettyworld.test_approval.approved.txt
++++ test_prettyworld.test_approval.received.txt
+@@ -1 +1 @@
+-{'Sample City': [Person(name='AliceFOO', age=25, address=Address(street='123 Street A', city=City(name='Sample City')), 
+ knows=[Person(name='Charlie', age=28, address=Address(street='789 Street C', city=City(name='Sample City')), knows=[])])]}
++{'Sample City': [Person(name='Alice', age=25, address=Address(street='123 Street A', city=City(name='Sample City')), 
+ knows=[Person(name='Charlie', age=28, address=Address(street='789 Street C', city=City(name='Sample City')), knows=[])])]}
+
+----
+
+Avec `WinMerge` sous Windows
+
+[.center]
+image::images/capture_approval_winmerge.png[alt]
+
+ifdef::mode_slide[=== Test de caractérisation > Exemple]
+
+* Date ? 
+** => Scrubber (_Laveur_) :  Remplace dates par placeholder `date${n}`
+
+[.left-column-1-3]
+--
+[source,python,attributes]
+-----
+@dataclass
+class DatedNote:
+    note: str
+    date : datetime
+
+    def merge(self, o: DatedNote):
+        self.note = f'{self.note}/{o.note}'
+        d = max(self.date, o.date)
+        self.date =d
+
+-----
+--
+[.right-column-2-3]
+--
+
+[source,python,attributes]
+-----
+def test_with_date_scrubbers():
+    # --Given--
+    # Create 2 hours spaced datetime
+    now = datetime.now()
+    later = now + timedelta(hours=2)
+    
+    # Assign them to different notes
+    dated_note0 = DatedNote("Foo", now)
+    dated_note1 = DatedNote("Bar", later)
+
+    # Ad hoc reporter
+    def as_report(note: DatedNote):
+        return f'NOTE:{note.note}, DATE={note.date.strftime("%Y%m%dT%H%M%SZ")}'
+
+    # --When--
+    dated_note1.merge(dated_note0)
+    # --Then--
+    verify(as_report(dated_note1),  
+            options=Options().with_scrubber(
+                DateScrubber.get_scrubber_for("00000000T000000Z")))
+-----
+--
+
+[.reset-column]
+--
+[source,text]
+----
+NOTE:Bar/Foo, DATE=<date0>
+----
+--
+
+
+=== Obstacles typiques
+
+* La dépendance irritante
+* L'instanciation cachée
+* La dépendance globale ou/et Singleton
+* La boucle imbriquée
+
+=== Obstacle > Le paramètre irritant
+
+Exemple avec une base de donnée en paramètre
+
+[{code_size}]
+[source,python,attributes]
+----
+class Validator:
+
+    def __init__(self, conn: connection)
+        """
+        :param conn: psycopg2 connection
+        """
+        ...
+
+    def validate(self, msg: Message):
+        ...
+    def load_rules(self, conn: connection):
+        ...
+----
+
+=== Obstacle > Le paramètre irritant
+
+Test lourd à mettre en oeuvre: base nécessaire
+
+[{code_size}]
+[source,python,attributes]
+----
+def test_validator_load_rules():
+    # Given
+    conn = psycopg2.connect(database = TEST_DATABASE, 
+                            user = TEST_USER, 
+                            host= TEST_HOST,
+                            password = TEST_PASSWORD,
+                            port = 5432)
+    clear_then_load_rules_in_database(conn)
+
+    validator = Validator(conn=conn)
+    message = Message(id=123, content=f'CONTACT server=nowhere.com')
+
+
+    # When
+    is_valid = validator.validate(msg)
+
+
+    # Then
+    assert is_valid
+----
+
+
+=== Obstacle > La dépendance cachée
+
+Pas vu, pas pris
+
+Utilisation cachée de `XBandTransmitter`
+
+[{code_size}]
+[source,python,attributes]
+----
+class RadioCommunicator(Communicator):
+
+    def __init__(self):
+        self.transmitter = XBandTransmitter() #<--------------- Hidden ! 
+
+    def send(msg: Message) -> None: 
+        if not self.check_compliance_with_very_complicated_rules(msg):
+            return
+
+        channel: XBandChannel = self.transmitter.get_channel()
+        channel.write(Message.to_base68(msg))
+        channel.close()
+
+    def receive(self) -> Message:
+        channel: XBandChannel = self.transmitter.get_channel()
+        content = channel.read()
+        if content :
+            return Message.from_base68(content)
+        channel.close()
+----
+
+Comment faire un test de `RadioCommunicator` alors que tout repose sur `XBandTransmitter` ?
+
+=== Obstacle > La dépendance cachée
+
+**Le problème**
+
+* Fort couplage
+** Connaissance nécessaire hors domaine
+* Difficulté d'exploration
+** Comment _disposer_ la dépendance pour les tests
+* Solution
+** _Reposer sur l'abstraction plutôt que l'implémentation !_
+
+[NOTE.notes]
+--
+La dépendance cachée traduit un problème de conception qui concerne l'initialisation des objet.
+La dépendance cachée peut créer de sérieux problèmes de test, car nous ne savons pas forcément, en tant que concepteur du `RadioCommunicator` tout ce que cela implique.
+L'autre problème concerne la connaissance, donc le couplage inhérent à cette dépendance cachée.
+
+Le mieux est de reposer que l'abstraction plutôt que l'implémentation.
+--
+
+=== Obstacle > La dépendance cachée 
+
+**Extraire l'interface du XBandTransmitter**
+
+* `XBandTransmitter` 
+** se limite à obtenir un `XBandChannel`
+* `XBandChannel` 
+** se limite à _écrire_, _lire_ et _se fermer_.
+
+=> Écrivons donc une interface `RadioTransmitter` et une interface `Channel`
+
+[.left-column]
+--
+[source,python,attributes]
+----
+class Channel(Protocol):
+    def write(self, content: str): 
+        ...
+    def read(self) -> str :
+        ...
+    def close(self):
+        ...
+
+class RadioTransmitter(Protocol):
+    def get_channel(self) -> Channel:
+        ...
+----
+--
+
+[.right-column]
+--
+[source,python,attributes]
+----
+class RadioCommunicator(Communicator):
+
+    def __init__(self):
+        self.transmitter: RadioTransmitter = XBandTransmitter()
+
+    def send(msg: Message) -> None: 
+        if not self.check_compliance_with_very_complicated_rules(msg):
+            return
+
+        channel: Channel = self.transmitter.get_channel()
+        channel.write(Message.to_base68(msg))
+        channel.close()
+
+    def receive(self) -> Message:
+        channel: Channel = self.transmitter.get_channel()
+        content = channel.read()
+        if content :
+            return Message.from_base68(content)
+        channel.close()
+----
+--
+
+=== Obstacle > La dépendance cachée 
+
+**Ajouter un paramètre optionnel**
+
+Pattern de l'injection de dépendance.
+
+[{code_size}]
+[source,python,attributes]
+----
+class RadioCommunicator(Communicator):
+
+    def __init__(self, transmitter: RadioTransmitter = None):
+        self.transmitter: RadioTransmitter = transmitter
+        if self.transmitter is None:
+            self.transmitter = XBandTransmitter()
+        ..
+----
+
+=== Obstacle > La dépendance cachée 
+
+**Tester**
+
+[source,python,attributes]
+----
+# Create Fake Channel
+class FakeChannel(Channel):
+    def __init__(self):
+        self.read_buffer = []
+        self.write_buffer = []
+        self.is_closed = False
+
+    def write(self, content: str): 
+        self.write_buffer.append(content)
+
+    def read(self) -> str :
+        return self.read_buffer.pop()
+
+    def close(self):
+        self.closed = True
+
+class FakeTransmitter(RadioTransmitter):
+    def __init__(self, fake_channel: FakeChannel):
+        self.fake_channel = fake_channel
+
+    def get_channel(self) -> Channel:
+        return self.fake_channel    
+----
+
+[source,python,attributes]
+----
+def test_send_message():
+    # Given
+    fake_channel = FakeChannel()  
+    fake_transmitter = FakeTransmitter(fake_channel)
+    message = Message(id=123, content=f'CONTACT server=nowhere.com')
+
+
+    # When
+    communicator = RadioCommunicator(transmitter=fake_transmitter)
+    communicator.send(message)
+
+
+    # Then
+    assert len(fake_channel.write_buffer) > 0
+
+----
+
+=== Obstacle > La dépendance globale
+
+
+* Pattern du `Singleton`
+** Dépendance à un accès au niveau classe `MessagesCollector.get_messages()`.
+
+[source,python,attributes]
+----
+class ReportStream:
+
+    def __init__(self, out: IO[str])
+        self.out = out
+
+    def report_last_messages(self):
+        messages = MessagesCollector.get_messages()
+        if not messages:
+            return
+        for message in messages:
+            out.write(f'ID:{message.id} => {message.content}')
+----
+
+Il est très difficile de la tester ainsi.
+C'est possible, mais cela doit être laborieux.
+
+
+=== Singleton is an anti-pattern
+
+* Singleton pattern du _Gang Of Four_ 
+** S'assurer qu'une seule instance qui puisse exister.
+* Anti-pattern 
+** Difficile à adapter aux différentes situations
+** Très fort couplage à une classe
+** Un changement impact tout le système
+*** => Aucune isolation :(
+
+=== Obstacle > La dépendance globale
+
+* Analyse
+** `ReportStream` très fortement couplée à `MessagesCollector`
+** Besoin -> obtenir des évènements
+* Solution
+** Abstraction (as ever)
+** Segregation Of Interface
+*** Responsabilité => Fournir des évènements 
+** Injection de l'abstraction
+
+[{code_size}]
+[source,python,attributes]
+----
+class MessageProvider(Protocol):
+
+    def get_messages(self) -> list[Message]:
+        ...
+----
+
+=== Obstacle > La dépendance globale
+
+**Travail sur le Singleton**
+
+* Modifier `MessagesCollector`
+** Lui faire endosser l'interface `MessageProvider`
+** Lui faire retourner via un `get()` lui même
+** Permettre la modification via un `set()`
+** Transformer la méthode de classe en méthode d'instance
+
+[.left-column]
+--
+[source,python,attributes]
+----
+class MessagesCollector(MessageProvider):
+
+    instance = MessagesCollector()
+
+    @classmethod
+    def get(cls, self):
+        return cls.instance
+
+    @classmethod
+    def set(cls, provider: MessageProvider):
+        cls.instance = provider
+
+    def get_messages(cls):
+        ...
+----
+--
+
+[.right-column]
+--
+[source,python,attributes]
+----
+class ReportStream:
+
+    def __init__(self, out: IO[str])
+        self.out = out
+
+    def report_last_messages(self):
+        messages = MessagesCollector.get().get_messages()
+        if not messages:
+            return
+        for message in messages:
+            out.write(f'ID:{message.id} => {message.content}')
+----
+--
+
+=== Test en modifiant le Singleton
+
+[.left-column]
+--
+[source,python,attributes]
+----
+@pytest.fixture
+def message_provider():
+    class FakeMessageProvider(MessageProvider):
+        def __init__(self):
+            self.messages = []
+
+        def get_messages(self) -> list[Message]:
+            return self.messages
+
+    # Set Up
+    fake_provider = FakeMessageProvider()
+    instance = MessagesCollector.get()
+    MessagesCollector.set(fake_provider)
+
+    yield fake_provider
+
+    # Tear Down
+    MessagesCollector.set(instance)
+----
+--
+
+
+[.right-column]
+--
+[source,python,attributes]
+----
+def test_print_messages(message_provider):
+    # Given
+    fake_provider = message_provider
+    out = io.StringIO
+    report = ReportStream(out)
+
+    fake_provider.messages = [Message(id=1, content='foo')]
+
+
+    # When
+    report.report_last_messages()
+
+
+    # Then
+    assert io.get_value() == 'ID:1 => foo'
+----
+--
+
+[.reset-column]
+[.center]
+--
+C'est mieux, mais c'est perfectible ...
+--
+
+=== En injectant le fournisseur
+
+Passer du Singleton à l'injection pour se débarrasser définitivement
+
+[.left-column]
+--
+[source,python,attributes]
+----
+class ReportStream:
+
+    def __init__(self, out: IO[str])
+        self.out = out
+
+    def report_last_messages(self):
+        messages = MessagesCollector.get_messages()
+        if not messages:
+            return
+        for message in messages:
+            out.write(f'ID:{message.id} => {message.content}')
+----
+--
+
+[.right-column]
+--
+[source,python,attributes]
+----
+class ReportStream:
+
+    def __init__(self, out: IO[str], provider: MessageProvider)
+        self.out = out
+        self.provider = provider
+
+    def report_last_messages(self):
+        messages = self.provider.get_messages()
+        if not messages:
+            return
+        for message in messages:
+            out.write(f'ID:{message.id} => {message.content}')
+----
+--
+
+=== Simplification du test
+
+[source,python,attributes]
+----
+class FakeMessageProvider(MessageProvider):
+    def __init__(self):
+        self.messages = []
+
+    def get_messages(self) -> list[Message]:
+        return self.messages
+
+def test_print_messages():
+    # Given
+    fake_provider = FakeMessageProvider()
+    out = io.StringIO
+    report = ReportStream(out=out, provider=fake_provider)
+
+    fake_provider.messages = [Message(id=1, content='foo')]
+
+
+    # When
+    report.report_last_messages()
+
+
+    # Then
+    assert io.get_value() == 'ID:1 => foo'
+----
+
+[%step]
+[.reset-column]
+[.center]
+--
+Oui mais dans la vraie vie ? J'ai besoin d'une unique instance !!
+--
+
+=== Singleton, uniquement à l'injection
+
+[{code_size}]
+[source,python,attributes]
+-----
+if __name__ == "__main__":
+    # ------------------- Actual Singleton here -------------------
+    unique_message_provider = MessagesCollector.get()
+    # -------------------------------------------------------------
+
+    report = ReportStream(out=out, provider=unique_message_provider)
+    report.report_last_messages()
+-----
+
+== Résumé
+
+[.center]
+--
+*Avant*
+
+image::images/report_stream-0.svg[]
+--
+
+ifdef::mode_slide[== Résumé]
+
+[.center]
+--
+*Abstraction*
+
+image::images/report_stream-1.svg[]
+--
+
+ifdef::mode_slide[== Résumé]
+
+[.center]
+--
+*Injection*
+
+image::images/report_stream-2.svg[]
+--
+
+== Cas d'usage: Simuler une base de données
+
+* Utiliser le pattern du repository
+** Insérer une couche d'abstraction si la construction des requêtes n'est pas de la responsabilité de l'objet sous test
+
+include::_use_repository.adoc[{include_options}]
+
+
+== Obstacle > boucles imbriquées 
+
+* Priorité Single Responsability Principle
+** Boucles imbriquées avec plusieurs responsabilités mélangées
+
+[{code_size}]
+[source,python,attributes]
+-----
+avg_w_lug = 0
+total_p = 0
+
+for r in flight.reservations:
+    for lug in r.luggages:
+        avg_w_lug += lug.weight if not lug.cabin or 0
+    p = r.price
+    if r.discnt:
+        p = p * r.discnt
+    total_p += p
+
+avg_w_lug = avg_w_lug / len(reservations)
+-----
+
+[%step]
+--
+Ah oui, encore une version compressée...
+--
+
+ifdef::mode_slide[=== Obstacle > boucles imbriquées]
+
+En clair
+
+[{code_size}]
+[source,python,attributes]
+-----
+average_weight_luggage = 0
+total_price = 0
+
+for reservation in flight.reservations:
+    for luggage in reservation.luggages:
+        average_weight_luggage += luggage.weight if not luggage.in_cabin or 0
+
+    price = reservation.price 
+    if reservation.discount:
+        price = price * reservation.discount
+    total_price += price
+
+average_weight_luggage = average_weight_luggage / len(reservations)
+-----
+
+* Comment tester et surtout quoi tester ?
+** Responsabilités mélangées ? 
+*** Lesquelles ?
+
+ifdef::mode_slide[=== Obstacle > boucles imbriquées]
+
+* Responsabilités identifiées
+** _Calcul du poids total des baggages en soute_
+** _Calcul du prix total du vol_
+
+Réécriture
+
+[{code_size}]
+[source,python,attributes]
+-----
+average_weight_luggage = 0
+for reservation in flight.reservations:
+    for luggage in reservation.luggages:
+        average_weight_luggage += luggage.weight if not luggage.in_cabin or 0
+average_weight_luggage = average_weight_luggage / len(reservations)
+
+total_price = 0
+for reservation in flight.reservations:
+    price = reservation.price 
+    if reservation.discount:
+        price = price * reservation.discount
+    total_price += price
+-----
+
+[source,python,attributes]
+-----
+def test_total_weight_with_some_cabin_bagages_and_without_discount():
+    ...
+def test_total_price_with_discounts_but_no_baggages():
+    ...
+-----
+
+ifdef::mode_slide[=== Obstacle > boucles imbriquées]
+
+Réécriture
+
+[{code_size}]
+[source,python,attributes]
+-----
+def get_total_weight_of_in_hold_baggages(reservations: List[Reservation]) -> float:
+    average_weight = 0
+    for reservation in reservations:
+        for luggage in reservation.luggages:
+            average_weight += luggage.weight if not luggage.in_cabin or 0
+    average_weight = average_weight / len(reservations)
+    return average_weight
+
+def get_total_price(reservations: List[Reservation]) -> float:
+    total = 0
+    for reservation in reservations:
+        price = reservation.price 
+        if reservation.discount:
+            price = price * reservation.discount
+        total += price
+    return total
+-----
+[{code_size}]
+[source,python,attributes]
+-----
+def test_total_weight_with_some_cabin_bagages(): ...
+def test_total_weight_without_bagages(): ...    
+def test_total_price_with_some_discounts():  ...
+def test_total_price_without_discounts(): ...
+-----
+
+
+== Design vs performance
+
+* Un faux débat
+** => Souvent la dégradation est minime
+** => Les compilateurs sont capables d'optimiser  
+*** Python...un peu https://wiki.python.org/moin/PythonSpeed/PerformanceTips
+** Seul un profiling est pertinent
+* Ce qui compte
+** (1) Bien écrire le code.
+** (2) Vérifier qu'il est correct (passe les tests)
+** (3) Établir un profil en cas de lenteur seulement.
+** (4) Optimiser si besoin.
+** (5) Répéter à partir du point 2. 
+
+
+
+
+== Amélioration de la testabilité par la hiérarchisation
+
+include::_test_by_overloading.adoc[{include_options}]
+
+
+== Obstacle > Ma classe fait trop de choses 
+
+[%step]
+* Top 10 Bad smells : 
+** Classe trop grosse ( https://refactoring.guru/fr/smells/large-class[_Large Class_])
+** => Part dans tous les sens
+** Intestable
+* C'est grave docteur ?
+** => Oui, trop de responsabilités
+** => Décomposition trop faible ou héritage mal digéré
+
+[%step]
+[.center]
+*****
+Il faut débusquer les responsabilités cachées !
+*****
+
+[NOTE.notes]
+--
+Nous avons vu que quand une classe semble lourde à tester, qu'elle semble lourde à tester, c'est souvent qu'elle porte trop de responsabilités. Elle fait trop de choses.
+Plusieurs experts se marchent dessus en permanence, il est temps de la décomposer.
+Ce genre de situation est une illustration de la dette technique: on a laissé la classe gonfler, en s'en servant comme pivot pour ajouter de nouvelles fonctionnalités.
+La théorie de la conception aurait voulu que son design soit mûrement réfléchi, et ses responsabilités bien établies à l'avance. Mais ce n'est pas la réalité opérationnelle rencontrée.
+--
+
+=== Responsabilités  > Grouper par nom
+
+* Proximité sémantique
+** Chercher les noms de propriétés, de fonction qui sont proches
+--
+
+[.center]
+Noms de propriétés
+
+[{code_size}]
+[source,python,attributes]
+----
+from dataclasses import dataclass
+
+@dataclass
+class People:
+    name: str
+    age: int
+    gender: str
+    address: str
+    phone_number: str
+    email: str
+    company_name: str
+    company_address: str
+    job_title: str
+    job_description: str
+----
+--
+
+ifdef::mode_slide[=== Responsabilités  > Grouper par nom]
+
+--
+[.center]
+Noms de méthodes
+
+[{code_size}]
+[source,python,attributes]
+----
+@dataclass
+class People:
+    ...
+    def send_email(self, message: str) -> None: ...
+    def call_by_phone(self) -> None: ...
+    def change_job_title(self, new_title: str) -> None: ...
+    def update_address(self, new_address: str) -> None: ...
+    def get_personal_info(self) -> str: ...
+    def get_company_info(self) -> str: ...
+    def update_personal_info(self, name: str, age: int, gender: str, address: str, phone_number: str, email: str) -> None: ...
+    def update_company_info(self, company_name: str, company_address: str, job_title: str, job_description: str) -> None: ...
+    def calculate_salary(self) -> float: ...
+    def hire_employee(self, employee_info: dict) -> None: ...
+    def fire_employee(self, employee_id: int) -> None: ...
+    # ... Other methods ...
+
+----
+--
+
+ifdef::mode_slide[]
+[%notitle]
+=== Responsabilités  > Grouper par nom
+endif::[]
+
+Éclatons les propriétés et les noms de méthodes
+
+[.center]
+image::images/testability-srp_0.svg[]
+
+ifdef::mode_slide[]
+[%notitle]
+=== Responsabilités  > Grouper par nom
+endif::[]
+
+Identifions des groupes de propriétés et les noms de méthodes
+
+[.center]
+image::images/testability-srp_1.svg[]
+
+ifdef::mode_slide[]
+[%notitle]
+=== Responsabilités  > Grouper par nom
+endif::[]
+
+Identifions des groupes de propriétés et de noms de méthodes
+
+[.center]
+image::images/testability-srp_1.1.svg[]
+
+ifdef::mode_slide[]
+[%notitle]
+=== Responsabilités  > Grouper par nom
+endif::[]
+
+Relions des groupes de propriétés et de noms de méthodes
+
+[.center]
+image::images/testability-srp_2.svg[]
+
+ifdef::mode_slide[]
+[%notitle]
+=== Responsabilités  > Grouper par nom
+endif::[]
+
+Identifions des responsabilités
+
+[.center]
+image::images/testability-srp_3.svg[]
+
+ifdef::mode_slide[]
+[%notitle]
+=== Responsabilités  > Grouper par nom
+endif::[]
+
+Reconsidérons la classe originelle
+
+[.center]
+image::images/testability-srp_4.svg[]
+
+ifdef::mode_slide[]
+[%notitle]
+=== Responsabilités  > Grouper par nom
+endif::[]
+
+Nous avons dégagé plusieurs responsabilités différentes.
+
+La classe `People` devient une composition
+
+[.left-column]
+--
+[{code_size}]
+[source,python,attributes]
+----
+from dataclasses import dataclass
+
+@dataclass
+class People:
+    person: Person
+    address: Address
+    phone_number: PhoneNumber
+    email: Email
+    company: Company
+    job: Job
+----
+--
+
+[.right-column]
+--
+[.right.at-middle]
+image::images/testability-srp_5.svg[]
+--
+
+[.reset-column]
+Maintenant il est possible de tester chaque classe indépendamment _chacune dans son  domaine d'expertise_
+
+=== Responsabilités  > Grouper par nom
+
+Et de _prioriser_ les tests de _People_ {cr}
+=> Focus sur les rares méthodes impliquant plusieurs classes comme
+
+[{code_size}]
+[source,python,attributes]
+-----
+@dataclass
+class People:
+    #...
+    def update_personal_info(self, name: str, age: int, gender: str, address: str, phone_number: str, email: str) -> None: ...
+    def update_company_info(self, company_name: str, company_address: str, job_title: str, job_description: str) -> None: ...
+    def calculate_salary(self) -> float: ...
+    def hire_employee(self, employee_info: dict) -> None: ...
+    def fire_employee(self, employee_id: int) -> None: ...
+-----
+
+=== Responsabilités  > Grouper par ce qui change
+
+* Scratch refactoring
+** => Modifier pour voir ce qui se passe
+** Ne pas chercher à conserver
+** Découvrir les éléments qui "cassent" en même temps
+* Philosophie du scratch
+** _Ce qui change ensemble va ensemble_
+** _Ce qui ne casse pas ensemble ne va pas ensemble_
+* Attention de le faire dans une branche jetable ou dédiée.
+
+[.at-middle-right]
+image::images/scratch.png[]
+
+
+=== Responsabilités  > Grouper par relations
+
+[.left-column-2-3]
+--
+
+* Grouper par relations
+** Si première approche sémantique KO
+*** => les noms sont mal formés (tiens, tiens...) par exemple
+** Etablir relations entre méthodes et propriétés **dans le code**
+* Faire un graphique
+** cf _Working Effectively with Legacy Code. p 255_
+
+--
+
+[.right-column-1-3]
+--
+[.center]
+image::images/capture_Working_graph.png[height=300]
+--
+
+ifdef::mode_slide[]
+[%notitle]
+=== Responsabilités  > Grouper par relations
+endif::[]
+
+[.center]
+--
+Lister les propriétés et les méthodes 
+
+image::images/testability-srp_interne_0.svg[]
+--
+
+ifdef::mode_slide[]
+[%notitle]
+=== Responsabilités  > Grouper par relations
+endif::[]
+
+[.center]
+--
+Lier les propriétés et méthodes utilisées **dans le corps** de chaque méthode 
+
+image::images/testability-srp_interne_1.svg[]
+--
+
+ifdef::mode_slide[]
+[%notitle]
+=== Responsabilités  > Grouper par relations
+endif::[]
+
+[.center]
+--
+Faire des clusters. Un cluster => Une responsabilité => Une classe
+
+image::images/testability-srp_interne_2.svg[]
+--
+
+[.subsection.background]
+[.center]
+== Un peu de méthode
+
+Pour éviter de se perdre en cours de route...
+
+=== Méthode MIKADO 
+
+* Méthode de refactoring
+** Se donner un objectif
+* Cycle de vie
+** Scratcher -> explorer les impacts -> noter -> revenir en arrière
+* Graphique
+** Utilisation d'une arborescence 
+** Mind mapping, papier/gomme, post-it
+* Disclaimer
+** Je découvre aussi :)
+
+== Mikado illustration
+
+ifdef::mode_slide[=== Mikado illustration]
+
+*Etape {counter:Mikado_Sample}*: Désignation de  l'object principale
+
+[.center]
+image::images/testability-Mikado-sample_0.svg[]
+
+ifdef::mode_slide[=== Mikado illustration]
+
+*Etape {counter:Mikado_Sample}*: Prè-requis : Scinder la méthode
+
+[.center]
+image::images/testability-Mikado-sample_1.svg[]
+
+Les responsabilité apparaissent en essayant de la tester
+
+ifdef::mode_slide[=== Mikado illustration]
+
+*Etape {counter:Mikado_Sample}*: Extraire les méthodes 
+
+[.center]
+image::images/testability-Mikado-sample_2.svg[]
+
+[.simple.smaller]
+* Méthode _"Recherche des évènements en base de données"_
+* Méthode _"Recherche du Closest Approach sur une liste d'évènements"_ une fois la liste obtenue
+
+ifdef::mode_slide[=== Mikado illustration]
+
+*Etape {counter:Mikado_Sample}*: Utilisez une abstraction de la base de données.
+
+[.center]
+image::images/testability-Mikado-sample_3.svg[]
+
+Parce que maintenant, je sais qu'injecter une abstraction d'une dépendance aussi lourde, c'est vraiment plus malin pour faire des tests  :)
+
+
+ifdef::mode_slide[=== Mikado illustration]
+
+*Etape {counter:Mikado_Sample}*: Abstraction => Extraction de l'interface d'accès aux données
+
+[.center]
+image::images/testability-Mikado-sample_4.svg[]
+
+ifdef::mode_slide[=== Mikado illustration]
+
+*Etape {counter:Mikado_Sample}*: C'est partie
+
+_"Extraire une interface de l'accès aux données"_
+
+[.center]
+image::images/testability-Mikado-sample_5.svg[]
+
+
+ifdef::mode_slide[=== Mikado illustration]
+
+*Etape {counter:Mikado_Sample}*: Les test d'approbation passent
+
+
+[.center]
+image::images/testability-Mikado-sample_6.svg[]
+
+La création d'une interface non utilisée n'a aucun impact sur le code :) {cr}
+C'est bon. Commit -> je _remonte_ au prè-requis précédent 
+
+
+ifdef::mode_slide[=== Mikado illustration]
+
+*Etape {counter:Mikado_Sample}*: Extraction _"Recherche des évènements en base de données"_
+
+[.center]
+image::images/testability-Mikado-sample_7.svg[]
+
+Les test passent toujours => Remontons au près-requis précédent.
+
+ifdef::mode_slide[=== Mikado illustration]
+
+*Etape {counter:Mikado_Sample}*: Le près-requis a un autre près-requis
+
+
+[.center]
+image::images/testability-Mikado-sample_8.svg[]
+
+Il faut traiter _"Recherche du Closest Approach sur une liste d'évènements"_ avant _"Scinder méthode"_
+
+Les test passent toujours => Remontons au près-requis précédent.
+
+ifdef::mode_slide[=== Mikado illustration]
+
+*Etape {counter:Mikado_Sample}*: _"Scinder méthode"_
+
+[.center]
+image::images/testability-Mikado-sample_9.svg[]
+
+Les test passent toujours => Remontons au près-requis précédent.
+
+ifdef::mode_slide[=== Mikado illustration]
+
+*Etape {counter:Mikado_Sample}*: Plus de prè-requis !!
+
+[.center]
+image::images/testability-Mikado-sample_10.svg[]
+
+ifdef::mode_slide[=== Mikado illustration]
+
+*Etape {counter:Mikado_Sample}*: **Objectif atteint**
+
+[.center]
+image::images/testability-Mikado-sample_11.svg[]
+
+
+ifdef::mode_slide[=== Mikado illustration]
+
+[.left-column]
+--
+* Phase exploratrice
+** En _scratchant_, 
+*** découverte de problème => identification de prè-requis
+** Les résultats ne sont pas utilisables
+*** => Retour à l'état stable précédent
+--
+
+[.right-column]
+--
+[.center]
+image::images/testability-Mikado-sample_12.svg[]
+--
+
+ifdef::mode_slide[=== Mikado illustration]
+
+[.left-column]
+--
+* Phase de réalisation
+** Dépiler les prè-requis
+** Remonter jusqu'à l'objectif initial
+** Les tests doivent toujours passer
+--
+
+[.right-column]
+--
+[.center]
+image::images/testability-Mikado-sample_13.svg[]
+--
+
+ifdef::mode_slide[== Méthode MIKADO ]
+
+[.center]
+image::images/testability-Mikado_0.svg[]
+
+ifdef::mode_slide[=== Méthode MIKADO ]
+
+[.center]
+image::images/testability-Mikado_1.svg[]
+
+ifdef::mode_slide[=== Méthode MIKADO ]
+
+[.center]
+image::images/testability-Mikado_2.svg[]
+
+
+== Mikado références
+
+* https://www.youtube.com/watch?v=xXvuBX1bVh8[Live-Refactoring de Legacy Code avec la technique du Golden Master ()]
+* https://understandlegacycode.com/blog/a-process-to-do-safe-changes-in-a-complex-codebase/[Use the Mikado Method to do safe changes in a complex codebase]
+
+[.end.background]
+[.center]
+== Améliorer la testabilité
+
+[.left-column]
+--
+* L’échec comme premier pas.
+* Mocking
+* Legacy
+** Le cercle infernale
+** Chirurgie de guerre
+** Test de caractérisation
+* Obstacles typiques
+** Le paramètre irritant
+** La dépendance cachée
+** La dépendance globale
+** La boucle imbriquée
+--
+
+[.right-column]
+--
+
+* Par la hiérarchisation
+** Testing par surcharge
+** Test par sous-classage
+* Responsabilités
+*** Grouper par nom
+*** Grouper par ce qui change
+*** Grouper par relations
+* Méthode MIKADO
+--
+
+
+// end::content[]
