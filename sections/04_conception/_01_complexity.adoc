@@ -42,7 +42,7 @@ image::images/as_legos.jpg[]
 
 
 
-== Modularité
+ifdef::mode_slide[=== Modularité]
 
 [.left-column-2-3]
 --
@@ -57,7 +57,7 @@ image::images/as_legos.jpg[]
 image::images/redux.gif[]
 --
 
-== Modularité
+ifdef::mode_slide[=== Modularité]
 
 [.left-column-2-3]
 --
@@ -85,14 +85,21 @@ C'est à dire que nous cherchons à obtenir des sous-composants que nous pouvons
 Avoir un ensemble isolé est une condition nécessaire mais pas suffisante pour considérer un sous-composant comme un module. Dans l'idéal, il faudrait qu'il soit identifiable, suffisamment autosuffisant et potentiellement réutilisable.
 --
 
-== Modularité
+ifdef::mode_slide[=== Modularité]
 
-* Module
-** Entité du langage 
-*** _module python, package java, classes, ..._
+[.left-column]
+* Module (ou composant)
 ** Identifiable 
 ** Suffisamment autosuffisant, 
 ** Potentiellement réutilisable.
+
+[.right-column]
+* Sur plusieurs niveaux d'abstraction
+** Haut niveau
+*** Modèle métier, Fonctionnalités, ...
+** Bas niveau
+*** Entité du langage 
+**** _module python, package java, classes, librairies, ..._
 
 
 

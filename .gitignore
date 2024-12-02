@@ -1,0 +1,11 @@
+.bundle/
+bin/
+Gemfile.lock
+*.pdf
+*.bkp
+*.html
+.vscode/launch.json
+.venv
+.vscode/settings.json
+.python-version
+drawio/*.dtmp

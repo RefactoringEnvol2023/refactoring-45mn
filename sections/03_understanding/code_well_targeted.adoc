@@ -7,22 +7,63 @@ endif::[]
 
 // tag::content[]
 
+[.subsection.background]
+[.center]
+[%notitle]
+== Rendez votre code lisible: nommage
+
+Rendez votre code lisible
+
+[.huge]#Le découpage#
+
 [.black.background]
 [.center]
 == Coder, ce n'est pas empiler des lignes de code
 
 image::images/wikipedia_Digital_rain_animation_small_letters_shine.gif[]
 
-Coder, c'est structurer un texte pour mettre en relief les préoccupations (_Concern_)
+Coder, c'est structurer un texte
 
-== Identifier et isoler les préoccupations 
+== Distinguer l'intention de l'implémentation
 
-* Une préoccupation annonce son **intention** (_WHAT_).
-** Une réponse courte à la question 
-*** _"Qu'est-ce que ça fait ?"._
-* Une préoccupation n'est pas une *implémentation* (_HOW_).
-** Elle ne répond pas à la question 
-*** _"Comment ça fait"._
+[.center]
+[.left-column]
+--
+*Intention*
+
+Quel est l'objectif de l'entité ?
+
+[.center]
+****
+**WHAT** does it do ?
+****
+
+--
+
+[.center]
+[.right-column]
+--
+*Implémentation*
+
+Comment l'entité réalise son objectif ?
+
+[.center]
+****
+**HOW** does it do it ?
+****
+--
+
+[.reset-column]
+[.center]
+--
+Erreur de conception courante: mélanger intention et implémentation
+_Surtout chez les développeuses et développeurs_
+--
+
+
+=== Démarche
+
+Le cas ci-dessous est une illustration
 
 === Montrer les intentions avant les implémentations
 
@@ -269,15 +310,15 @@ def report_starship_availability_for(patrol):
 
 == Séparer l'intention de l'implémentation
 
-* Si nous commençons à écrire les choses
-** rapidement piégé par les détails de la mise en œuvre,
+* Commencer par écrire le code est une erreur
+** rapidement piégé par les détails de la mise en œuvre, 
 ** bataille avec les outils,
 * Et ce, sans savoir vraiment ce que vous voulez vraiment.
 
 === Séparer l'intention de l'implémentation
 
 [.simple]
-Vous avez l'idée de ce que vous voulez, de l'*intention*, d'une manière très abstraite.
+Définissez ce que vous voulez, l'*intention*, d'une manière très abstraite.
 
 [.center]
 image::images/good_practices-what_how_call_hierarchie_0.svg[]
@@ -286,13 +327,13 @@ image::images/good_practices-what_how_call_hierarchie_0.svg[]
 === Séparer l'intention de l'implémentation
 
 [.simple]
-Vous réfléchissez à la manière d'obtenir, d'une manière un peu moins abstraite
+Réfléchissez à la manière de l'obtenir, d'une manière un peu moins abstraite
 
 [.center]
 image::images/good_practices-what_how_call_hierarchie_1.svg[]
 
 [.simple]
-mais pas très poussée.
+mais sans aller dans le détail.
 
 
 
@@ -371,7 +412,7 @@ image::images/good_practices-scale_3.svg[]
 ** *Fin* de texte -> fonctions de plus **bas** niveau
 
 
-== Quels techniques de refactoring
+== Techniques de refactoring associées au nommage
 
 * `Rename`
 * `Extract Method`

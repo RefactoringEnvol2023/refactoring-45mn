@@ -77,12 +77,13 @@ c'est (aussi) garder la complexité {cr}
 --
 * Réponse à la complexité
 ** Expériences passées submergées par la complexité
-** Nouvelle façon de définir et atteindre la capacité fonctionnelle
 * Adopter une démarche _itérative_ et _incrémentale_
-** Ajouts de fonctionnalité successifs 
-** Feedback rapide du client
-** Ne pas prétendre à l'exhaustivité 
+** Ajouts de fonctionnalité successifs & feedback rapide du client
 ** Se donner le droit de découvrir et **changer**
+* Sur le plan purement technique
+** Conception (_Software Design_) **toujours en évolution**
+** Une remise en cause et une adaptation permanente
+** Un rythme de travail **soutenable**
 --
 
 [.right-column-1-3]
@@ -91,27 +92,17 @@ c'est (aussi) garder la complexité {cr}
 image::images/iterative-incremental-mona-lisa-b8d2b.png[]
 --
 
-ifdef::mode_slide[]
-=== Agilité
-endif::mode_slide[]
-
-* Sur le plan purement technique
-** Conception (_Software Design_) **toujours en évolution**
-** Une recherche de l'excellence technique
-* Sur le plan management 
-** Avoir confiance dans les personnes en charge du développement.
-** Une remise en cause et une adaptation permanente
-** Un rythme de travail **soutenable**
-
 [%step]
+[.reset-column]
 [.center]
 *****
-Faire évoluer un logiciel à un rythme **soutenable** => garantir maintenabilité
+Faire évoluer un logiciel à un rythme **soutenable** => s'assurer de sa maintenabilité
 *****
+
 
 == Maintenabilité
 
-Mesure de la facilité
+Qualité norme ISO 9126 => Mesure de la facilité
 
 
 [.left-column]
@@ -127,7 +118,7 @@ Mesure de la facilité
 [.reset-column]
 [.center]
 *****
-Faire évoluer un logiciel à un rythme **soutenable** => garantir maintenabilité
+Faire évoluer un logiciel à un rythme **soutenable** => s'assurer de sa maintenabilité
 
 \... à condition de ne pas être trop *endetté*.
 *****
@@ -165,55 +156,32 @@ image::images/dette_technique.png[]
 Au cours d'un développement, il est naturel que des compromis, des maladresses ou des raccourcis soient commis. Cela fait parfois gagner du temps ou des ressources, parfois cela est du à un manque de clairvoyance ou plus simplement à une vision de la conception qui n'était pas la plus pertinente mais qui pénalisent la maintenabilité de l'application et sa faculté à évoluer.
 --
 
-ifdef::mode_slide[=== Dette technique]
 
+ifdef::mode_slide[=== Dette technique]
 * Choisir, c'est regretter
-** Développer => choix à court termes
-*** Contraintes de temps et de budget
-*** Personnes/compétences/expertises disponibles
-* Choix à court terme => entropie naturelle
-** => Compromis, maladresses, manques de clairvoyances, renoncements
-** => Compréhension ou conception obsolète ou incomplète
-
-ifdef::mode_slide[=== Dette technique]
-
+** En fonction des contraintes (temps/budget/compétences/expertises disponibles)
 * Dette technique
 ** _Dette_ :  Renoncement accélérant le développement
 ** _Remboursement_ : Réécriture du code
 * Endettement
+** La dette non-remboursée engendre de la dette supplémentaire.
 ** Dette remboursée _plus tard_ => Dette plus coûteuse à rembourser
 
 [.center]
 image:images/dette-technique_1.svg[alt]
 image:images/dette-technique_2.svg[alt]
 
-// === Dette technique > Appréciation
 
-// * Toutes les dettes ne se valent pas
-// ** Choix assumé pour se développer
-// ** Descente aux enfer par méconnaissance 
-// ** => Deux axes d'évaluation
+[NOTE.notes]
+--
+* Choisir, c'est regretter
+** Contraintes de temps et de budget
+** Personnes/compétences/expertises disponibles
+* Choix à court terme => entropie naturelle
+** => Compromis, maladresses, manques de clairvoyances, renoncements
+** => Compréhension ou conception obsolète ou incomplète
+--
 
-
-// [.left-column]
-// --
-// * Réfléchie
-// ** Limitation  
-// *** A une partie isolée du code ou généralisée
-// ** Prudence
-// *** Aspect marginal ou au coeur de l'application 
-
-// --
-// [.right-column]
-// --
-
-// * Volontaire
-// ** En connaissance de cause
-// *** Conscience et compétence 
-// *** ... ou absence des deux
-// ** Recul
-// *** Réflexion sur ce qu'il aurait possible de _mieux_ faire
-// --
 
 === Dette technique > Appréciation
 
@@ -275,16 +243,18 @@ En _refactorisant_ le code.
 
 == Refactoring : Définition
 
-[%step]
+[.left-column]
 * _Refactorisation (technique)_:
 ** Modification de la structure interne d'un logiciel {cr}
 afin de le rendre plus facile à comprendre {cr}
 et moins coûteux à faire évoluer {cr}
-sans changer son comportement observable
+_sans changer son comportement observable_
+
+[.right-column]
 * _Refactoriser (processus)_: 
 ** Restructurer un logiciel {cr}
 en appliquant une série de refactorisations {cr}
-sans changer son comportement observable
+_sans changer son comportement observable_
 
 
 === Refactoring : Concepts clef
@@ -298,7 +268,7 @@ sans changer son comportement observable
 * Allocations de ressources
 ** => Préoccupation gestion de projet
 *** Connaissance nécessaire 
-*** Philosophie, avantages, inconvénients
+*** Investissement 
 
 
 [NOTE.notes]
@@ -306,7 +276,9 @@ sans changer son comportement observable
 La grille de lecture du refactoring ne porte pas sur l'exécution d'un programme, car on le suppose suffisamment satisfaisant, ne serait-ce que le temps de procéder à la modification de son code. Le refactoring se concentre la notion de modification du code et ses effets comme objets principaux. Il pourrait être considéré, dans sa forme la plus extrême, comme un jeu intellectuel, aux effets très concrets pourtant dans la vie d'un projet.
 --
 
-=== Refactoring : L'évolution comme objet
+=== Refactoring : capacitée d'évolution comme critère de qualité
+
+[.center]
 
 [quote, Martin Fowler]
 _____
@@ -325,17 +297,16 @@ De même l'ingénierie navale cherche à minimiser l'impact des avaries et des v
 Et ce n'est pas parce que le navire flotte qu'il est dans un état satisfaisant.
 --
 
-=== Refactoring : Objectifs ?
+// === Refactoring : Objectifs ?
 
-[.simple]
-* Faciliter la compréhension
-* Améliorer la conception
-* Améliorer la confiance
-* Être plus productif
+// [.simple]
+// * Faciliter la compréhension
+// * Améliorer la conception
+// * Améliorer la confiance
+// * Être plus productif
 
 === Refactoring : Quand ?
 
-[%step]
 * Quand refactoriser
 ** Avant d'ajouter une nouvelle fonctionnalité (_Feature_)
 ** Quand la mise sous tests est problématique (_Testability_)
@@ -350,7 +321,6 @@ Et ce n'est pas parce que le navire flotte qu'il est dans un état satisfaisant.
 
 === Refactoring : une activité particulière ?
 
-[%step]
 * Non, une activité _normale_
 ** Activité de développement !
 * Doit-elle être traiter à part ?
@@ -412,8 +382,9 @@ Tous
 * Techniques divisées en 6 catégories
 * Très (Trop) nombreuses
 ** Nous n'allons pas **toutes** les voir
-** Mais ça vaut le coup de les parcourir !
+** Mais ça vaut le coup de les parcourir et lire la motivation derrière chacune !
 --
+
 
 [NOTE.notes]
 --
@@ -634,19 +605,18 @@ def compute_invoice(shipment, order, discount):
 * 8) Commiter 
 * Passer à la technique suivante si nécessaire
 
-=== Approche personnelle biaisée
+// === Approche personnelle biaisée
 
-* Le refactoring => ensemble de techniques et d'habitudes, 
-** qui vont des plus simples aux plus complexes
-* Je suis de culture _Java_
-** => Refactoring nécessaire
-** => Disponibles dans Eclipse
-** J'en connaissais ou n'en pratiquais que quelques unes
-* Je considérais certaines comme insignifiantes
-** => jusqu'à la lecture du livre de M. Fowler
-
-[%step]
-*Je recommande de les parcourir toutes et de lire la motivation derrière : elle est souvent très légitime*
+// * Le refactoring => ensemble de techniques et d'habitudes, 
+// ** qui vont des plus simples aux plus complexes
+// * Je suis de culture _Java_
+// ** => Refactoring nécessaire
+// ** => Disponibles dans Eclipse
+// ** J'en connaissais ou n'en pratiquais que quelques unes
+// * Je considérais certaines comme insignifiantes
+// ** => jusqu'à la lecture du livre de M. Fowler
+// [%step]
+// *Je recommande de les parcourir toutes et de lire la motivation derrière : elle est souvent très légitime*
 
 [.splash.background]
 [.center]
@@ -758,7 +728,6 @@ image::images/sonarqube/2023-11-12T21-54-03-101Z.png[]
 
 == Refactoring : L'esprit plutôt que la lettre
 
-[%step]
 * Avoir un fil conducteur plutôt qu'un catalogue
 ** Nombreuses techniques
 ** Automatisation grâce aux outils existants

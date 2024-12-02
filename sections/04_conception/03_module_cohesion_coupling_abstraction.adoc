@@ -1,0 +1,228 @@
+= Module is about cohesion, coupling and abstraction
+include::../../_inc_context.adoc[]
+ifndef::imagesdir[]
+:imagesdir: ../../
+endif::[]
+
+// tag::content[]
+
+== Comment établir un module ?
+
+[.left-column]
+--
+* Contenu
+** Comment savoir ce qui doit aller ensemble et ce qui est différent ?
+* Interaction
+** Comment interagir avec un module ?
+--
+
+[.right-column]
+--
+[.right.middle]
+image::images/design-module.svg[]
+--
+
+ifdef::mode_slide[]
+
+[NOTE.notes]
+--
+- Approche par analogie: réflexe humain que de chercher des similitudes entre des objets pour les classer.
+- Minimisation de l'effort cognitif
+--
+endif::mode_slide[]
+
+
+
+[NOTE.notes]
+--
+Les mathématiques ont développé la théorie des ensembles pour traiter de ce genre de question. Toutefois, aussi belle et pertinente soit-elle, ce n'est pas forcément elle qui va être la plus utile au quotidien aux développeuses et développeurs qui doivent faire face à tas de lignes de code qui sont tout simplement impossible à comprendre sans sentir le tournis.
+
+Ce que veulent faire ces personnes, c'est trouver le moyen d'établir les critères qui permettent de savoir si un ensemble d'instructions font parties d'un ensemble ou non.
+
+Cette question est presque d'ordre générale pour l'humain : il passe son temps, parfois à son corps défendant, à tout classer. Les événements, les éléments de la nature, les sons, les situations et aussi les autres humains, afin de pouvoir se faire l'économie d'une réflexion et d'une écoute. De même que le cerveau filtre ce qu'il veut ignorer pour éviter la saturation, comme l'herbe dans le dos quand nous sommes allongés au soleil dans un parc, mais qu'il est capable de regarder attentivement sur des araignées et des fourmis sont aperçues dans le proche voisinage.
+
+Établir des frontières, des interfaces, des critères, c'est une technique de minimisation de l'effort cognitif.
+Ca tombe bien, car c'est notre objectif aussi.
+--
+
+== Cohésion, couplage et abstraction
+
+Pour qualifier un module, on utilise 
+
+* La cohésion d'un module
+* L'interface d'un module
+* Le couplage entre modules
+* Le niveau d'abstraction du module
+
+[NOTE.notes]
+--
+J'insiste beaucoup sur ces concepts car beaucoup de personne les considèrent comme évidents sans y avoir vraiment réfléchi. Ils ont souvent agit par intuition, par mimétisme ou par habitude. Or, il arrive encore très fréquemment que des problèmes de conception soient dus à une mauvaise compréhension de ces concepts.
+
+J'espère que vus vous en souviendrez et que vous les utiliserez pour analyser et améliorer vos propres conceptions.
+--
+
+[.center]
+=== Disclaimer
+
+Nous parlons d'interface et d'abstraction dans le sens large.
+
+Merci de ne pas **plaquer** tout de suite les concepts de programmation orientée objet sur ces concepts.
+
+=== Cohésion
+
+[quote]
+____
+La cohésion indique à quel point les différentes parties d'un module sont liées entre elles et comment elles se concentrent sur la réalisation d'un objectif commun spécifique.
+____
+
+[%step]
+* Faible cohésion
+** Le lien entre les composants est inexistant ou futile.
+* Forte cohésion
+** Les composants contribuent à une seule et unique tâche bien spécifique.
+
+
+[NOTE.notes]
+--
+* Analogie d'un faible cohésion: des personnes dans le métro qui n'ont rien à voir les unes avec les autres.
+* Analogie d'une forte cohésion: une brigade de sapeur-pompiers dont l'objectif commun est la lutte contre un incendie.
+--
+
+ifdef::mode_presentation[]
+[.center]
+=== Faible cohésion
+
+image::https://upload.wikimedia.org/wikipedia/commons/thumb/9/95/2013_people_wating_on_subway_platform_12677922605.jpg/640px-2013_people_wating_on_subway_platform_12677922605.jpg[]
+
+[.center]
+=== Forte cohésion
+
+image::https://reconversion.pompiersparis.fr/wp-content/uploads/2021/07/FRPPBSPP_2021-026-108-Erwan-Thepault%C2%A9BSPP-%C2%A9BSPP-BCOM.jpg[height=450px]
+
+endif::[]
+
+
+=== Interface
+
+[quote]
+____
+L'interface est la frontière entre ce module et le reste du système et le moyen d'interagir avec lui.
+____
+
+
+[.center]
+image::https://img.audiofanzine.com/images/u/product/normal/esi-waveterminal-192l-1748.jpg[height=300px]
+
+
+// === Interface > Requise ou offerte
+
+// [.left-column]
+// --
+// * Interface offerte
+// ** -> Proposée par module
+
+// [.center]
+// image::images/interface-offerte.svg[]
+
+// * Interface requise
+// ** -> Nécessaire fonctionnement du module
+
+// [.center]
+// image::images/interface-requise.svg[]
+
+// --
+
+// [.right-column]
+// --
+// * Exemple
+// ** Ampli guitare
+// *** Pour avoir du son
+// **** Entrée guitare -> interface requise
+// **** Alimentation électrique -> interface requise
+// ** Possibilité(s)
+// *** Sortie casque -> interface offerte
+
+// [.center]
+// image::images/interface-exemple-guitare.svg[]
+// --
+
+
+=== Couplage
+
+[quote]
+____
+Le couplage indique à quel point des modules différents sont interdépendants.
+____
+
+// [.at-top-right]
+// image::images/coupling.gif[height=300px]
+
+[%step]
+* Faible couplage
+** Les composants des différents modules n'échangent pas d'information.
+* Fort couplage
+** les composants des différents modules lisent et modifient directement leurs données respectives.
+
+[NOTE.notes]
+--
+* Analogie d'un faible couplage: des personnes qui ne se connaissent pas et qui n'ont pas besoin de se parler.
+* Analogie d'un fort couplage: des danseurs de tangos, dont les mouvements sont intriqués.
+--
+
+
+ifdef::mode_presentation[]
+[.center]
+=== Faible couplage
+
+image::https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Spectateurs.jpg/640px-Spectateurs.jpg[]
+
+[.center]
+=== Fort couplage
+
+image::https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/Pas_de_deux_du_Corsaire_Ballet_national_de_Cuba_%28Grand_Palais%29_%28989747896%29.jpg/640px-Pas_de_deux_du_Corsaire_Ballet_national_de_Cuba_%28Grand_Palais%29_%28989747896%29.jpg[]
+
+endif::[]
+
+
+=== Abstraction
+
+[quote]
+____
+L'abstraction est la représentation des caractéristiques essentielles d'une entité sans se préoccuper de sa forme concrète.
+____
+
+[.simple]
+* Forme d'économie cognitive
+** __"Je ne veux pas savoir/te dire comment ça marche, +
+je veux juste savoir/te dire ce que ça fait"__
+
+
+ifdef::mode_presentation[]
+[.center]
+=== Abstraction
+
+Entité télécommande
+
+[.left-column-1-3]
+--
+Forte abstraction
+
+image::images/abstraction-telecommande.png[]
+--
+
+[.middle-column-1-3]
+vs
+
+[.right-column-1-3]
+--
+Formes concrètes
+
+image::https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/T%C3%A9l%C3%A9commande_444.jpg/800px-T%C3%A9l%C3%A9commande_444.jpg[]
+--
+endif::[]
+
+include::_cohesion_coupling_abstraction_cognitif.adoc[{include_options},tag=content]
+
+
+
+// end::content[]

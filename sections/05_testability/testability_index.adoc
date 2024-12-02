@@ -17,16 +17,26 @@ endif::[]
 [.center]
 == Améliorer la testabilité
 
+image::images/break_everything.gif[height=300]
 
-=== L'immobilisation par la peur
+Sans confiance, pas d'évolution possible à un rythme soutenable
 
-* La peur de tout casser.
-** => Premier frein au changement
 
-image::images/break_everything.gif[]
+// === L'immobilisation par la peur
 
-Aucune évolution n'est possible, à un rythme _soutenable_ sans confiance.
+// * La peur de tout casser.
+// ** => Premier frein au changement
 
+// image::images/break_everything.gif[]
+
+// Aucune évolution n'est possible, à un rythme _soutenable_ sans confiance.
+
+===  Confiance
+
+[quote,Kent Beck]
+____
+"Code that isn't tested doesn't work - this seems to be the safe assumption."
+____
 
 == La pierre philosophale
 
@@ -45,38 +55,37 @@ ____
 * Qualité Logicielle
 ** Une des caractéristiques de la _Maintenabilité_
 
-== L'échec comme premier pas.
+// == L'échec comme premier pas.
 
-Dans la philosophe des tests, l'échec n'est pas négatif, c'est sa persistence qu'il l'est éventuellement.
+// Dans la philosophe des tests, l'échec n'est pas négatif, c'est sa persistence qu'il l'est éventuellement.
 
-L'échec indique qu'un état souhaité n'est pas atteint. L'objectif est de l'atteindre
+// L'échec indique qu'un état souhaité n'est pas atteint. L'objectif est de l'atteindre
 
-=== Cycle de vie > Développement Normal
-
-
-[.center]
-image::images/pytest-lifecycle.png[]
-
-=== Cycle de vie > Bug fix
-
-[.center]
-image::images/pytest-bugfix-lifecycle.png[]
-
-=== Le TDD et refactoring
-
-* _Test Driven Development_
-** Approche érigée en philosophie
+// === Cycle de vie > Développement Normal
 
 
-[quote,Kent Beck]
-____
-"Code that isn't tested doesn't work - this seems to be the safe assumption."
-____
+// [.center]
+// image::images/pytest-lifecycle.png[]
 
-ifdef::mode_slide[=== Le TDD et refactoring]
+// === Cycle de vie > Bug fix
 
-[.center]
-image::images/pytest-tdd-lifecycle.png[]
+// [.center]
+// image::images/pytest-bugfix-lifecycle.png[]
+
+// === Le TDD et refactoring
+
+// * _Test Driven Development_
+// ** Approche érigée en philosophie
+
+
+// ifdef::mode_slide[=== Le TDD et refactoring]
+
+// [.center]
+// image::images/pytest-tdd-lifecycle.png[]
+
+
+
+
 
 === Testabilité, conception et confiance
 
@@ -120,8 +129,6 @@ ____
 --
 
 === Les tests comme bac à sable 
-
-
 
 * Tester pour mieux cerner
 ** Contexte fonctionnel pour prototyper
@@ -177,181 +184,181 @@ Ce n'est pas une réalité statistique, mais c'est motivant.
 ** Débat...
 
 
-== Test facile
+// == Test facile
 
-Une simple fonction à tester
+// Une simple fonction à tester
 
-[{code_size}]
-[source,python,attributes]
------
-def filter_info_log(logs: List[Log]) -> List[Log]:
-    return [log for log in logs if log.level == "INFO"]
------
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// def filter_info_log(logs: List[Log]) -> List[Log]:
+//     return [log for log in logs if log.level == "INFO"]
+// -----
 
-[.left-column]
---
+// [.left-column]
+// --
 
-[{code_size}]
-[source,python,attributes]
------
-def test_filter_info_log_empty():
-    # Given
-    logs = []
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// def test_filter_info_log_empty():
+//     # Given
+//     logs = []
 
-    # When
-    result = filter_info_log(logs)
+//     # When
+//     result = filter_info_log(logs)
 
-    # Then
-    assert result == []
------
---
+//     # Then
+//     assert result == []
+// -----
+// --
 
 
-[.right-column]
---
-[{code_size}]
-[source,python,attributes]
------
-def test_filter_info_log_no_info_logs():
-    # Given
-    logs = [Log(level="ERROR")]
+// [.right-column]
+// --
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// def test_filter_info_log_no_info_logs():
+//     # Given
+//     logs = [Log(level="ERROR")]
 
-    # When
-    result = filter_info_log(logs)
+//     # When
+//     result = filter_info_log(logs)
 
-    # Then
-    assert result == []
------
---
+//     # Then
+//     assert result == []
+// -----
+// --
 
-=== Test moins facile
+// === Test moins facile
 
-Un filtre plus élaboré avec des règles
-[{code_size}]
-[source,python,attributes]
------
-class LogFilter:
-    def __init__(self, rules: Rules):
-        self.rules = rules
+// Un filtre plus élaboré avec des règles
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// class LogFilter:
+//     def __init__(self, rules: Rules):
+//         self.rules = rules
     
-    def filter_info_log(self, logs: List[Log]) -> List[Log]:
-        return [log for log in logs if self.rules.validate(log, "INFOS")]
------
+//     def filter_info_log(self, logs: List[Log]) -> List[Log]:
+//         return [log for log in logs if self.rules.validate(log, "INFOS")]
+// -----
 
-[.left-column]
---
-[{code_size}]
-[source,python,attributes]
------
-def test_filter_info_log_empty():
-    # Given
-    logs = []
-    rules = Rules()
-    log_filter = LogFilter(rules)
+// [.left-column]
+// --
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// def test_filter_info_log_empty():
+//     # Given
+//     logs = []
+//     rules = Rules()
+//     log_filter = LogFilter(rules)
 
-    # When
-    result = log_filter.filter_info_log(logs)
+//     # When
+//     result = log_filter.filter_info_log(logs)
 
-    # Then
-    assert result == []
------
---
-
-
-[.right-column]
---
-[{code_size}]
-[source,python,attributes]
------
-def test_filter_info_log_no_info_logs():
-    # Given
-    logs = [Log(level="ERROR")]
-    rules = Rules()
-    log_filter = LogFilter(rules)
-
-    # When
-    result = log_filter.filter_info_log(logs)
-
-    # Then
-    assert result == []
------
---
+//     # Then
+//     assert result == []
+// -----
+// --
 
 
+// [.right-column]
+// --
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// def test_filter_info_log_no_info_logs():
+//     # Given
+//     logs = [Log(level="ERROR")]
+//     rules = Rules()
+//     log_filter = LogFilter(rules)
 
-=== Test franchement pas facile
+//     # When
+//     result = log_filter.filter_info_log(logs)
 
-Un filtre avec des règles chargées depuis une base de données
-[{code_size}]
-[source,python,attributes]
------
-class LogFilter:
-    def __init__(self, rules: Rules):
-        self.rules = rules
-    ...
-
-class Rules:
-    def __init__(self, db_name: str, db_host: str, db_login: str, db_password: str):
-        self. conn = psycopg2.connect(database = db_name, 
-                                        user = db_login, 
-                                        host= db_host,
-                                        password = db_password)
-
-        self.load_rules(self.conn)
------
-
-[.left-column]
---
-[{code_size}]
-[source,python,attributes]
------
-def test_filter_info_log_empty():
-    # Given
-    conn = psycopg2.connect(database = TEST_DATABASE, 
-                            user = TEST_USER, 
-                            host= TEST_HOST,
-                            password = TEST_PASSWORD,
-                            port = 5432)
-    clear_then_load_rules_in_database(conn)
-
-    logs = []
-    rules = Rules(conn)
-    log_filter = LogFilter(rules)
-
-    # When
-    result = log_filter.filter_info_log(logs)
-
-    # Then
-    assert result == []
------
---
+//     # Then
+//     assert result == []
+// -----
+// --
 
 
-[.right-column]
---
-[{code_size}]
-[source,python,attributes]
------
-def test_filter_info_log_no_info_logs():
-    # Given
-    conn = psycopg2.connect(database = TEST_DATABASE, 
-                            user = TEST_USER, 
-                            host= TEST_HOST,
-                            password = TEST_PASSWORD,
-                            port = 5432)
-    clear_then_load_rules_in_database(conn)
 
-    logs = [Log(level="ERROR")]
-    rules = Rules(conn)
-    log_filter = LogFilter(rules)
+// === Test franchement pas facile
 
-    # When
-    result = log_filter.filter_info_log(logs)
+// Un filtre avec des règles chargées depuis une base de données
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// class LogFilter:
+//     def __init__(self, rules: Rules):
+//         self.rules = rules
+//     ...
 
-    # Then
-    assert result == []
------
---
+// class Rules:
+//     def __init__(self, db_name: str, db_host: str, db_login: str, db_password: str):
+//         self. conn = psycopg2.connect(database = db_name, 
+//                                         user = db_login, 
+//                                         host= db_host,
+//                                         password = db_password)
+
+//         self.load_rules(self.conn)
+// -----
+
+// [.left-column]
+// --
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// def test_filter_info_log_empty():
+//     # Given
+//     conn = psycopg2.connect(database = TEST_DATABASE, 
+//                             user = TEST_USER, 
+//                             host= TEST_HOST,
+//                             password = TEST_PASSWORD,
+//                             port = 5432)
+//     clear_then_load_rules_in_database(conn)
+
+//     logs = []
+//     rules = Rules(conn)
+//     log_filter = LogFilter(rules)
+
+//     # When
+//     result = log_filter.filter_info_log(logs)
+
+//     # Then
+//     assert result == []
+// -----
+// --
+
+
+// [.right-column]
+// --
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// def test_filter_info_log_no_info_logs():
+//     # Given
+//     conn = psycopg2.connect(database = TEST_DATABASE, 
+//                             user = TEST_USER, 
+//                             host= TEST_HOST,
+//                             password = TEST_PASSWORD,
+//                             port = 5432)
+//     clear_then_load_rules_in_database(conn)
+
+//     logs = [Log(level="ERROR")]
+//     rules = Rules(conn)
+//     log_filter = LogFilter(rules)
+
+//     # When
+//     result = log_filter.filter_info_log(logs)
+
+//     # Then
+//     assert result == []
+// -----
+// --
 
 === Facilité et couplage
 
@@ -380,156 +387,156 @@ def test_filter_info_log_no_info_logs():
 
 
 
-=== Mocking
+// === Mocking
 
-[.left-column-2-3]
---
-[%step]
-* Situation complexe => Mocking
-** Mock => objet simulé qui **imite** le comportement d'objets réels de manière _contrôlée_.
-** Outil très puissants et utiles
-*** Simuler un composant 
-*** Espionner les appels à un composant
-*** Création d'un objet virtuel uniquement pour les tests
+// [.left-column-2-3]
+// --
+// [%step]
+// * Situation complexe => Mocking
+// ** Mock => objet simulé qui **imite** le comportement d'objets réels de manière _contrôlée_.
+// ** Outil très puissants et utiles
+// *** Simuler un composant 
+// *** Espionner les appels à un composant
+// *** Création d'un objet virtuel uniquement pour les tests
 
-* Outil pas toujours simples
-** _Quand même mocker devient compliqué_ => Sérieux problème de conception.
---
+// * Outil pas toujours simples
+// ** _Quand même mocker devient compliqué_ => Sérieux problème de conception.
+// --
 
-[.right-column-1-3]
---
-[.right]
-image::https://media.giphy.com/media/C3YUQjB5agrdK/giphy.gif[]
---
+// [.right-column-1-3]
+// --
+// [.right]
+// image::https://media.giphy.com/media/C3YUQjB5agrdK/giphy.gif[]
+// --
 
-[.black.background]
-[.center]
-=== Mocking > Harry PotDeFleur
+// [.black.background]
+// [.center]
+// === Mocking > Harry PotDeFleur
 
-Trop facile de se sortir d'une mauvaise situation par mauvaise conception.
+// Trop facile de se sortir d'une mauvaise situation par mauvaise conception.
 
-[.center]
-image::images/harrypotter.jpg[]
-
-
+// [.center]
+// image::images/harrypotter.jpg[]
 
 
-== Mocking Python en 30 secondes
-
-* Simple illustration 
-** Python `unittest.mock.Mock`
-* Pour plus de détails
-** Mockito pour java https://site.mockito.org/
-** Mocking avec Pytest https://github.com/Euclid-Python/Python-pytest/blob/master/pytest-mock.ipynb[Euclid-Python/Python-pytest^]
 
 
-=== Mock > The Callable Box
+// == Mocking Python en 30 secondes
 
-[.center]
-**Mock, la boîte à invocations**
-
-Un `Mock` est une _fonction_ qui renvoie _toujours_ un autre `Mock`.
-
-[.left-column]
---
-[{code_size}]
-[source,python,attributes]
------
-mock = Mock()
-
-foo = mock.foo()
-
-assert isinstance(foo(), Mock)
------
---
-
-[.right-column]
---
-[{code_size}]
-[source,python,attributes]
------
-mock = Mock()
-
-result = mock.n().o().p().q().r().s().some_method()
-
-assert isinstance(result, Mock)
------
---
-
-=== Mock > return_value et side_effect
-
-* Simulation des valeurs à renvoyer
-
-* `return_value` 
-** => valeur _unique_ à renvoyer pour tout appel
-
-[{code_size}]
-[source,python,attributes]
------
-mock = Mock()
-
-mock.some_method.return_value = 'A'
-
-assert [mock.some_method() for _ in range(3)] == ['A', 'A', 'A']
------
-
-* `side_effect` 
-** => Séquence de valeurs à associer à une séquence d'appels
-
-[{code_size}]
-[source,python,attributes]
------
-mock = Mock()
-
-mock.some_method.side_effect = 'A', 'B', 'C'
-
-assert [mock.some_method() for _ in range(3)] == ['A', 'B', 'C']
------
+// * Simple illustration 
+// ** Python `unittest.mock.Mock`
+// * Pour plus de détails
+// ** Mockito pour java https://site.mockito.org/
+// ** Mocking avec Pytest https://github.com/Euclid-Python/Python-pytest/blob/master/pytest-mock.ipynb[Euclid-Python/Python-pytest^]
 
 
-=== Mock > The Recording Box
+// === Mock > The Callable Box
 
-[.center]
-**Mock, la boîte à enregistrer**
+// [.center]
+// **Mock, la boîte à invocations**
 
-Espionner les appels de méthodes
+// Un `Mock` est une _fonction_ qui renvoie _toujours_ un autre `Mock`.
 
---
-[{code_size}]
-[source,python,attributes]
------
-mock = Mock()
-mock.some_method.return_value = 'foo'
+// [.left-column]
+// --
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// mock = Mock()
 
-mock.some_method()
-mock.some_method.assert_called_once() # <-- assert been called one time
+// foo = mock.foo()
 
-mock.some_method()
-assert mock.some_method.call_count == 2 # <-- assert been called two times
------
---
+// assert isinstance(foo(), Mock)
+// -----
+// --
 
-Plusieurs possibilités 
---
-[{code_size}]
------
-assert_any_call
-assert_called
-assert_called_once
-assert_called_once_with
-assert_called_with
-assert_has_calls
-assert_not_called
-attach_mock
-call_args
-call_args_list
-call_count
-called
------
---
+// [.right-column]
+// --
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// mock = Mock()
 
-Voir la documentation 
-[.smaller]#https://docs.python.org/3/library/unittest.mock.html#
+// result = mock.n().o().p().q().r().s().some_method()
+
+// assert isinstance(result, Mock)
+// -----
+// --
+
+// === Mock > return_value et side_effect
+
+// * Simulation des valeurs à renvoyer
+
+// * `return_value` 
+// ** => valeur _unique_ à renvoyer pour tout appel
+
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// mock = Mock()
+
+// mock.some_method.return_value = 'A'
+
+// assert [mock.some_method() for _ in range(3)] == ['A', 'A', 'A']
+// -----
+
+// * `side_effect` 
+// ** => Séquence de valeurs à associer à une séquence d'appels
+
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// mock = Mock()
+
+// mock.some_method.side_effect = 'A', 'B', 'C'
+
+// assert [mock.some_method() for _ in range(3)] == ['A', 'B', 'C']
+// -----
+
+
+// === Mock > The Recording Box
+
+// [.center]
+// **Mock, la boîte à enregistrer**
+
+// Espionner les appels de méthodes
+
+// --
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// mock = Mock()
+// mock.some_method.return_value = 'foo'
+
+// mock.some_method()
+// mock.some_method.assert_called_once() # <-- assert been called one time
+
+// mock.some_method()
+// assert mock.some_method.call_count == 2 # <-- assert been called two times
+// -----
+// --
+
+// Plusieurs possibilités 
+// --
+// [{code_size}]
+// -----
+// assert_any_call
+// assert_called
+// assert_called_once
+// assert_called_once_with
+// assert_called_with
+// assert_has_calls
+// assert_not_called
+// attach_mock
+// call_args
+// call_args_list
+// call_count
+// called
+// -----
+// --
+
+// Voir la documentation 
+// [.smaller]#https://docs.python.org/3/library/unittest.mock.html#
 
 
 [.black.background]
@@ -556,22 +563,22 @@ _Code que vous n'êtes pas prêt à modifier_
 ****
 --
 
-== Legacy et testabilité
+// == Legacy et testabilité
 
-[quote,Michael C. Feathers]
-____
-Code without tests is **bad** code. {cr}
+// [quote,Michael C. Feathers]
+// ____
+// Code without tests is **bad** code. {cr}
 
-It doesn't matter how well written it is; {cr}
-it doesn't matter how pretty {cr}
-or object-oriented or well-encapsulated it is. 
+// It doesn't matter how well written it is; {cr}
+// it doesn't matter how pretty {cr}
+// or object-oriented or well-encapsulated it is. 
 
-**With tests, we can change ** {cr}
-the behavior of our code quickly and verifiably. 
+// **With tests, we can change ** {cr}
+// the behavior of our code quickly and verifiably. 
 
-**Without them, we really don't know ** {cr}
-if our code is getting better or worse.
-____
+// **Without them, we really don't know ** {cr}
+// if our code is getting better or worse.
+// ____
 
 === Le cercle infernale
 
@@ -585,7 +592,7 @@ image::images/testability-cercle.svg[alt]
 Obstacles aux tests _unitaires_
 ****
 
-[%step]
+
 * Dépendances trop lourdes ou complexes
 ** Base de données, Web Services extérieurs, Librairies tierces
 ** _Science_ => Équipement, Carte électronique, Instrument
@@ -607,7 +614,6 @@ Obstacles aux tests _unitaires_
 
 === Chirurgie de guerre 
 
-[%step]
 * Tester coûte que coûte
 ** => Renoncer temporairement à un idéal de conception
 ** => Constater la conservation des comportements
@@ -615,7 +621,7 @@ Obstacles aux tests _unitaires_
 ** Mettre une variable témoin 
 ** Transgresser les principes de conception
 
-[%step]
+
 ****
 Ce qui compte est de savoir ce que fait **réellement** le code, avant de l'améliorer
 ****
@@ -638,900 +644,900 @@ Given -> When -> Then -> Verify
 ****
 --
 
-ifdef::mode_slide[=== Test de caractérisation > Exemple]
+// ifdef::mode_slide[=== Test de caractérisation > Exemple]
 
-[.center]
-image::images/testability-approval.svg[]
+// [.center]
+// image::images/testability-approval.svg[]
 
-ifdef::mode_slide[=== Test de caractérisation > Exemple]
+// ifdef::mode_slide[=== Test de caractérisation > Exemple]
 
-[.left-column]
---
-[{code_size}]
-[source,python,attributes]
-----
-@dataclass
-class City:
-    name: str
-
-
-@dataclass
-class Address:
-    street: str
-    city: City
-
-----
---
-
-[.right-column]
---
-[{code_size}]
-[source,python,attributes]
-----
-@dataclass
-class Person:
-    name: str
-    age: int
-    address: Optional[Address] = None
-    knows: List[Person] = field(default_factory=list)
-
-    def add_relation(self, relation: Person):
-        self.knows.append(relation)
+// [.left-column]
+// --
+// [{code_size}]
+// [source,python,attributes]
+// ----
+// @dataclass
+// class City:
+//     name: str
 
 
+// @dataclass
+// class Address:
+//     street: str
+//     city: City
 
-@dataclass
-class Family:
-    name: str
-    members: List[Person] = field(default_factory=list)
-----
---
+// ----
+// --
 
-[.reset-column]
---
-[{code_size}]
-[source,python,attributes]
-----
-def find_related_people_in_same_cities(families: List[Family]):
-    people_relations_by_cities = {}
-    for family in families:
-        for people in family.members:
-            if people.knows:
-                city_name = people.address.city.name
-                relations = people_relations_by_cities.get(city_name)
-                if not relations:
-                    relations = []
-                    people_relations_by_cities[city_name] = relations
-                relations.append(people)
-    return people_relations_by_cities
-----
---
+// [.right-column]
+// --
+// [{code_size}]
+// [source,python,attributes]
+// ----
+// @dataclass
+// class Person:
+//     name: str
+//     age: int
+//     address: Optional[Address] = None
+//     knows: List[Person] = field(default_factory=list)
 
-ifdef::mode_slide[=== Test de caractérisation > Exemple]
-
-Test avec approval
-
-[{code_size}]
-[source,python,attributes]
-----
-from approvaltests.approvals import verify
-
-def test_approval():
-    # ___ GIVEN ____
-    city = City(name='Sample City')
-
-    alice = Person(name='Alice', age=25, address=Address(street='123 Street A', city=city))
-    bob = Person(name='Bob', age=30, address=Address(street='456 Street B', city=city))
-    family1 = Family(name='Smith', members=[alice, bob])
-    charlie = Person(name='Charlie', age=28, address=Address(street='789 Street C', city=city))
-    family2 = Family(name='Johnson', members=[charlie])
-
-    alice.knows.append(charlie)
-
-    # ___ WHEN ____
-    related_people = find_related_people_in_same_cities([family1, family2])
-
-    # ___ THEN ____
-    verify(related_people)
-----
+//     def add_relation(self, relation: Person):
+//         self.knows.append(relation)
 
 
 
+// @dataclass
+// class Family:
+//     name: str
+//     members: List[Person] = field(default_factory=list)
+// ----
+// --
 
-ifdef::mode_slide[=== Test de caractérisation > Exemple]
+// [.reset-column]
+// --
+// [{code_size}]
+// [source,python,attributes]
+// ----
+// def find_related_people_in_same_cities(families: List[Family]):
+//     people_relations_by_cities = {}
+//     for family in families:
+//         for people in family.members:
+//             if people.knows:
+//                 city_name = people.address.city.name
+//                 relations = people_relations_by_cities.get(city_name)
+//                 if not relations:
+//                     relations = []
+//                     people_relations_by_cities[city_name] = relations
+//                 relations.append(people)
+//     return people_relations_by_cities
+// ----
+// --
+
+// ifdef::mode_slide[=== Test de caractérisation > Exemple]
+
+// Test avec approval
+
+// [{code_size}]
+// [source,python,attributes]
+// ----
+// from approvaltests.approvals import verify
+
+// def test_approval():
+//     # ___ GIVEN ____
+//     city = City(name='Sample City')
+
+//     alice = Person(name='Alice', age=25, address=Address(street='123 Street A', city=city))
+//     bob = Person(name='Bob', age=30, address=Address(street='456 Street B', city=city))
+//     family1 = Family(name='Smith', members=[alice, bob])
+//     charlie = Person(name='Charlie', age=28, address=Address(street='789 Street C', city=city))
+//     family2 = Family(name='Johnson', members=[charlie])
+
+//     alice.knows.append(charlie)
+
+//     # ___ WHEN ____
+//     related_people = find_related_people_in_same_cities([family1, family2])
+
+//     # ___ THEN ____
+//     verify(related_people)
+// ----
 
 
-Lancement avec 
-
-[{code_size}]
-[source,bash]
-----
-pytest --approvaltests-use-reporter='PythonNativeReporter'
-----
-
-Dans `Pycharm`
-
-[.center]
-image:images/capture_approval_1.png[]
 
 
-ifdef::mode_slide[=== Test de caractérisation > Exemple]
-
-Sortie du test en échec
-
-[source,text]
-----
-to approve this result:
-
-move "/home/mdexet/approval_demo/tests/test_prettyworld.test_approval.received.txt" 
- "/home/mdexet/approval_demo/tests/test_prettyworld.test_approval.approved.txt"
-
-...
-code>       verify(related_people)
-E       approvaltests.approval_exception.ApprovalException: Approval Mismatch, received != approved
-E       	Approved: /home/mdexet/approval_demo/tests/test_prettyworld.test_approval.approved.txt
-E       	Received: /home/mdexet/approval_demo/tests/test_prettyworld.test_approval.received.txt
-----
-
-Dans PyCharm
-
-[.center]
-image:images/capture_approval_0.png[width=500] 
+// ifdef::mode_slide[=== Test de caractérisation > Exemple]
 
 
+// Lancement avec 
 
-ifdef::mode_slide[=== Test de caractérisation > Exemple]
+// [{code_size}]
+// [source,bash]
+// ----
+// pytest --approvaltests-use-reporter='PythonNativeReporter'
+// ----
 
-Contenu du fichier de référence `test_prettyworld.test_approval.approved.txt`
+// Dans `Pycharm`
 
-[{code_size}]
-[source,text]
-----
-{'Sample City': [Person(name='Alice', age=25, address=Address(street='123 Street A', city=City(name='Sample City')), 
-  knows=[Person(name='Charlie', age=28, address=Address(street='789 Street C', city=City(name='Sample City')), knows=[])])]}
-----
+// [.center]
+// image:images/capture_approval_1.png[]
 
 
-ifdef::mode_slide[=== Test de caractérisation > Exemple]
+// ifdef::mode_slide[=== Test de caractérisation > Exemple]
 
-Dès que le fichier est copié, le test est validé.
-En cas de déviation, que ce passe-t-il ?
+// Sortie du test en échec
 
-[{code_size}]
-[source,text]
-----
+// [source,text]
+// ----
+// to approve this result:
 
-tests\test_prettyworld.py:24: ApprovalException
--------------------------------- Captured stdout call --------------------------------- 
---- test_prettyworld.test_approval.approved.txt
-+++ test_prettyworld.test_approval.received.txt
-@@ -1 +1 @@
--{'Sample City': [Person(name='AliceFOO', age=25, address=Address(street='123 Street A', city=City(name='Sample City')), 
- knows=[Person(name='Charlie', age=28, address=Address(street='789 Street C', city=City(name='Sample City')), knows=[])])]}
-+{'Sample City': [Person(name='Alice', age=25, address=Address(street='123 Street A', city=City(name='Sample City')), 
- knows=[Person(name='Charlie', age=28, address=Address(street='789 Street C', city=City(name='Sample City')), knows=[])])]}
+// move "/home/mdexet/approval_demo/tests/test_prettyworld.test_approval.received.txt" 
+//  "/home/mdexet/approval_demo/tests/test_prettyworld.test_approval.approved.txt"
 
-----
+// ...
+// code>       verify(related_people)
+// E       approvaltests.approval_exception.ApprovalException: Approval Mismatch, received != approved
+// E       	Approved: /home/mdexet/approval_demo/tests/test_prettyworld.test_approval.approved.txt
+// E       	Received: /home/mdexet/approval_demo/tests/test_prettyworld.test_approval.received.txt
+// ----
 
-Avec `WinMerge` sous Windows
+// Dans PyCharm
 
-[.center]
-image::images/capture_approval_winmerge.png[alt]
+// [.center]
+// image:images/capture_approval_0.png[width=500] 
 
-ifdef::mode_slide[=== Test de caractérisation > Exemple]
 
-* Date ? 
-** => Scrubber (_Laveur_) :  Remplace dates par placeholder `date${n}`
 
-[.left-column-1-3]
---
-[source,python,attributes]
------
-@dataclass
-class DatedNote:
-    note: str
-    date : datetime
+// ifdef::mode_slide[=== Test de caractérisation > Exemple]
 
-    def merge(self, o: DatedNote):
-        self.note = f'{self.note}/{o.note}'
-        d = max(self.date, o.date)
-        self.date =d
+// Contenu du fichier de référence `test_prettyworld.test_approval.approved.txt`
 
------
---
-[.right-column-2-3]
---
+// [{code_size}]
+// [source,text]
+// ----
+// {'Sample City': [Person(name='Alice', age=25, address=Address(street='123 Street A', city=City(name='Sample City')), 
+//   knows=[Person(name='Charlie', age=28, address=Address(street='789 Street C', city=City(name='Sample City')), knows=[])])]}
+// ----
 
-[source,python,attributes]
------
-def test_with_date_scrubbers():
-    # --Given--
-    # Create 2 hours spaced datetime
-    now = datetime.now()
-    later = now + timedelta(hours=2)
+
+// ifdef::mode_slide[=== Test de caractérisation > Exemple]
+
+// Dès que le fichier est copié, le test est validé.
+// En cas de déviation, que ce passe-t-il ?
+
+// [{code_size}]
+// [source,text]
+// ----
+
+// tests\test_prettyworld.py:24: ApprovalException
+// -------------------------------- Captured stdout call --------------------------------- 
+// --- test_prettyworld.test_approval.approved.txt
+// +++ test_prettyworld.test_approval.received.txt
+// @@ -1 +1 @@
+// -{'Sample City': [Person(name='AliceFOO', age=25, address=Address(street='123 Street A', city=City(name='Sample City')), 
+//  knows=[Person(name='Charlie', age=28, address=Address(street='789 Street C', city=City(name='Sample City')), knows=[])])]}
+// +{'Sample City': [Person(name='Alice', age=25, address=Address(street='123 Street A', city=City(name='Sample City')), 
+//  knows=[Person(name='Charlie', age=28, address=Address(street='789 Street C', city=City(name='Sample City')), knows=[])])]}
+
+// ----
+
+// Avec `WinMerge` sous Windows
+
+// [.center]
+// image::images/capture_approval_winmerge.png[alt]
+
+// ifdef::mode_slide[=== Test de caractérisation > Exemple]
+
+// * Date ? 
+// ** => Scrubber (_Laveur_) :  Remplace dates par placeholder `date${n}`
+
+// [.left-column-1-3]
+// --
+// [source,python,attributes]
+// -----
+// @dataclass
+// class DatedNote:
+//     note: str
+//     date : datetime
+
+//     def merge(self, o: DatedNote):
+//         self.note = f'{self.note}/{o.note}'
+//         d = max(self.date, o.date)
+//         self.date =d
+
+// -----
+// --
+// [.right-column-2-3]
+// --
+
+// [source,python,attributes]
+// -----
+// def test_with_date_scrubbers():
+//     # --Given--
+//     # Create 2 hours spaced datetime
+//     now = datetime.now()
+//     later = now + timedelta(hours=2)
     
-    # Assign them to different notes
-    dated_note0 = DatedNote("Foo", now)
-    dated_note1 = DatedNote("Bar", later)
+//     # Assign them to different notes
+//     dated_note0 = DatedNote("Foo", now)
+//     dated_note1 = DatedNote("Bar", later)
 
-    # Ad hoc reporter
-    def as_report(note: DatedNote):
-        return f'NOTE:{note.note}, DATE={note.date.strftime("%Y%m%dT%H%M%SZ")}'
+//     # Ad hoc reporter
+//     def as_report(note: DatedNote):
+//         return f'NOTE:{note.note}, DATE={note.date.strftime("%Y%m%dT%H%M%SZ")}'
 
-    # --When--
-    dated_note1.merge(dated_note0)
-    # --Then--
-    verify(as_report(dated_note1),  
-            options=Options().with_scrubber(
-                DateScrubber.get_scrubber_for("00000000T000000Z")))
------
---
+//     # --When--
+//     dated_note1.merge(dated_note0)
+//     # --Then--
+//     verify(as_report(dated_note1),  
+//             options=Options().with_scrubber(
+//                 DateScrubber.get_scrubber_for("00000000T000000Z")))
+// -----
+// --
 
-[.reset-column]
---
-[source,text]
-----
-NOTE:Bar/Foo, DATE=<date0>
-----
---
+// [.reset-column]
+// --
+// [source,text]
+// ----
+// NOTE:Bar/Foo, DATE=<date0>
+// ----
+// --
 
 
-=== Obstacles typiques
+// === Obstacles typiques
 
-* La dépendance irritante
-* L'instanciation cachée
-* La dépendance globale ou/et Singleton
-* La boucle imbriquée
+// * La dépendance irritante
+// * L'instanciation cachée
+// * La dépendance globale ou/et Singleton
+// * La boucle imbriquée
 
-=== Obstacle > Le paramètre irritant
+// === Obstacle > Le paramètre irritant
 
-Exemple avec une base de donnée en paramètre
+// Exemple avec une base de donnée en paramètre
 
-[{code_size}]
-[source,python,attributes]
-----
-class Validator:
+// [{code_size}]
+// [source,python,attributes]
+// ----
+// class Validator:
 
-    def __init__(self, conn: connection)
-        """
-        :param conn: psycopg2 connection
-        """
-        ...
+//     def __init__(self, conn: connection)
+//         """
+//         :param conn: psycopg2 connection
+//         """
+//         ...
 
-    def validate(self, msg: Message):
-        ...
-    def load_rules(self, conn: connection):
-        ...
-----
+//     def validate(self, msg: Message):
+//         ...
+//     def load_rules(self, conn: connection):
+//         ...
+// ----
 
-=== Obstacle > Le paramètre irritant
+// === Obstacle > Le paramètre irritant
 
-Test lourd à mettre en oeuvre: base nécessaire
-
-[{code_size}]
-[source,python,attributes]
-----
-def test_validator_load_rules():
-    # Given
-    conn = psycopg2.connect(database = TEST_DATABASE, 
-                            user = TEST_USER, 
-                            host= TEST_HOST,
-                            password = TEST_PASSWORD,
-                            port = 5432)
-    clear_then_load_rules_in_database(conn)
-
-    validator = Validator(conn=conn)
-    message = Message(id=123, content=f'CONTACT server=nowhere.com')
-
-
-    # When
-    is_valid = validator.validate(msg)
-
-
-    # Then
-    assert is_valid
-----
-
-
-=== Obstacle > La dépendance cachée
-
-Pas vu, pas pris
-
-Utilisation cachée de `XBandTransmitter`
-
-[{code_size}]
-[source,python,attributes]
-----
-class RadioCommunicator(Communicator):
-
-    def __init__(self):
-        self.transmitter = XBandTransmitter() #<--------------- Hidden ! 
+// Test lourd à mettre en oeuvre: base nécessaire
+
+// [{code_size}]
+// [source,python,attributes]
+// ----
+// def test_validator_load_rules():
+//     # Given
+//     conn = psycopg2.connect(database = TEST_DATABASE, 
+//                             user = TEST_USER, 
+//                             host= TEST_HOST,
+//                             password = TEST_PASSWORD,
+//                             port = 5432)
+//     clear_then_load_rules_in_database(conn)
+
+//     validator = Validator(conn=conn)
+//     message = Message(id=123, content=f'CONTACT server=nowhere.com')
+
+
+//     # When
+//     is_valid = validator.validate(msg)
+
+
+//     # Then
+//     assert is_valid
+// ----
+
+
+// === Obstacle > La dépendance cachée
+
+// Pas vu, pas pris
+
+// Utilisation cachée de `XBandTransmitter`
+
+// [{code_size}]
+// [source,python,attributes]
+// ----
+// class RadioCommunicator(Communicator):
+
+//     def __init__(self):
+//         self.transmitter = XBandTransmitter() #<--------------- Hidden ! 
 
-    def send(msg: Message) -> None: 
-        if not self.check_compliance_with_very_complicated_rules(msg):
-            return
-
-        channel: XBandChannel = self.transmitter.get_channel()
-        channel.write(Message.to_base68(msg))
-        channel.close()
-
-    def receive(self) -> Message:
-        channel: XBandChannel = self.transmitter.get_channel()
-        content = channel.read()
-        if content :
-            return Message.from_base68(content)
-        channel.close()
-----
-
-Comment faire un test de `RadioCommunicator` alors que tout repose sur `XBandTransmitter` ?
-
-=== Obstacle > La dépendance cachée
-
-**Le problème**
-
-* Fort couplage
-** Connaissance nécessaire hors domaine
-* Difficulté d'exploration
-** Comment _disposer_ la dépendance pour les tests
-* Solution
-** _Reposer sur l'abstraction plutôt que l'implémentation !_
-
-[NOTE.notes]
---
-La dépendance cachée traduit un problème de conception qui concerne l'initialisation des objet.
-La dépendance cachée peut créer de sérieux problèmes de test, car nous ne savons pas forcément, en tant que concepteur du `RadioCommunicator` tout ce que cela implique.
-L'autre problème concerne la connaissance, donc le couplage inhérent à cette dépendance cachée.
-
-Le mieux est de reposer que l'abstraction plutôt que l'implémentation.
---
-
-=== Obstacle > La dépendance cachée 
-
-**Extraire l'interface du XBandTransmitter**
-
-* `XBandTransmitter` 
-** se limite à obtenir un `XBandChannel`
-* `XBandChannel` 
-** se limite à _écrire_, _lire_ et _se fermer_.
-
-=> Écrivons donc une interface `RadioTransmitter` et une interface `Channel`
-
-[.left-column]
---
-[source,python,attributes]
-----
-class Channel(Protocol):
-    def write(self, content: str): 
-        ...
-    def read(self) -> str :
-        ...
-    def close(self):
-        ...
-
-class RadioTransmitter(Protocol):
-    def get_channel(self) -> Channel:
-        ...
-----
---
+//     def send(msg: Message) -> None: 
+//         if not self.check_compliance_with_very_complicated_rules(msg):
+//             return
+
+//         channel: XBandChannel = self.transmitter.get_channel()
+//         channel.write(Message.to_base68(msg))
+//         channel.close()
+
+//     def receive(self) -> Message:
+//         channel: XBandChannel = self.transmitter.get_channel()
+//         content = channel.read()
+//         if content :
+//             return Message.from_base68(content)
+//         channel.close()
+// ----
+
+// Comment faire un test de `RadioCommunicator` alors que tout repose sur `XBandTransmitter` ?
+
+// === Obstacle > La dépendance cachée
+
+// **Le problème**
+
+// * Fort couplage
+// ** Connaissance nécessaire hors domaine
+// * Difficulté d'exploration
+// ** Comment _disposer_ la dépendance pour les tests
+// * Solution
+// ** _Reposer sur l'abstraction plutôt que l'implémentation !_
+
+// [NOTE.notes]
+// --
+// La dépendance cachée traduit un problème de conception qui concerne l'initialisation des objet.
+// La dépendance cachée peut créer de sérieux problèmes de test, car nous ne savons pas forcément, en tant que concepteur du `RadioCommunicator` tout ce que cela implique.
+// L'autre problème concerne la connaissance, donc le couplage inhérent à cette dépendance cachée.
+
+// Le mieux est de reposer que l'abstraction plutôt que l'implémentation.
+// --
+
+// === Obstacle > La dépendance cachée 
+
+// **Extraire l'interface du XBandTransmitter**
+
+// * `XBandTransmitter` 
+// ** se limite à obtenir un `XBandChannel`
+// * `XBandChannel` 
+// ** se limite à _écrire_, _lire_ et _se fermer_.
+
+// => Écrivons donc une interface `RadioTransmitter` et une interface `Channel`
+
+// [.left-column]
+// --
+// [source,python,attributes]
+// ----
+// class Channel(Protocol):
+//     def write(self, content: str): 
+//         ...
+//     def read(self) -> str :
+//         ...
+//     def close(self):
+//         ...
+
+// class RadioTransmitter(Protocol):
+//     def get_channel(self) -> Channel:
+//         ...
+// ----
+// --
 
-[.right-column]
---
-[source,python,attributes]
-----
-class RadioCommunicator(Communicator):
+// [.right-column]
+// --
+// [source,python,attributes]
+// ----
+// class RadioCommunicator(Communicator):
 
-    def __init__(self):
-        self.transmitter: RadioTransmitter = XBandTransmitter()
+//     def __init__(self):
+//         self.transmitter: RadioTransmitter = XBandTransmitter()
 
-    def send(msg: Message) -> None: 
-        if not self.check_compliance_with_very_complicated_rules(msg):
-            return
+//     def send(msg: Message) -> None: 
+//         if not self.check_compliance_with_very_complicated_rules(msg):
+//             return
 
-        channel: Channel = self.transmitter.get_channel()
-        channel.write(Message.to_base68(msg))
-        channel.close()
+//         channel: Channel = self.transmitter.get_channel()
+//         channel.write(Message.to_base68(msg))
+//         channel.close()
 
-    def receive(self) -> Message:
-        channel: Channel = self.transmitter.get_channel()
-        content = channel.read()
-        if content :
-            return Message.from_base68(content)
-        channel.close()
-----
---
+//     def receive(self) -> Message:
+//         channel: Channel = self.transmitter.get_channel()
+//         content = channel.read()
+//         if content :
+//             return Message.from_base68(content)
+//         channel.close()
+// ----
+// --
 
-=== Obstacle > La dépendance cachée 
+// === Obstacle > La dépendance cachée 
 
-**Ajouter un paramètre optionnel**
+// **Ajouter un paramètre optionnel**
 
-Pattern de l'injection de dépendance.
+// Pattern de l'injection de dépendance.
 
-[{code_size}]
-[source,python,attributes]
-----
-class RadioCommunicator(Communicator):
+// [{code_size}]
+// [source,python,attributes]
+// ----
+// class RadioCommunicator(Communicator):
 
-    def __init__(self, transmitter: RadioTransmitter = None):
-        self.transmitter: RadioTransmitter = transmitter
-        if self.transmitter is None:
-            self.transmitter = XBandTransmitter()
-        ..
-----
-
-=== Obstacle > La dépendance cachée 
-
-**Tester**
-
-[source,python,attributes]
-----
-# Create Fake Channel
-class FakeChannel(Channel):
-    def __init__(self):
-        self.read_buffer = []
-        self.write_buffer = []
-        self.is_closed = False
+//     def __init__(self, transmitter: RadioTransmitter = None):
+//         self.transmitter: RadioTransmitter = transmitter
+//         if self.transmitter is None:
+//             self.transmitter = XBandTransmitter()
+//         ..
+// ----
+
+// === Obstacle > La dépendance cachée 
+
+// **Tester**
+
+// [source,python,attributes]
+// ----
+// # Create Fake Channel
+// class FakeChannel(Channel):
+//     def __init__(self):
+//         self.read_buffer = []
+//         self.write_buffer = []
+//         self.is_closed = False
 
-    def write(self, content: str): 
-        self.write_buffer.append(content)
+//     def write(self, content: str): 
+//         self.write_buffer.append(content)
 
-    def read(self) -> str :
-        return self.read_buffer.pop()
-
-    def close(self):
-        self.closed = True
-
-class FakeTransmitter(RadioTransmitter):
-    def __init__(self, fake_channel: FakeChannel):
-        self.fake_channel = fake_channel
-
-    def get_channel(self) -> Channel:
-        return self.fake_channel    
-----
-
-[source,python,attributes]
-----
-def test_send_message():
-    # Given
-    fake_channel = FakeChannel()  
-    fake_transmitter = FakeTransmitter(fake_channel)
-    message = Message(id=123, content=f'CONTACT server=nowhere.com')
-
-
-    # When
-    communicator = RadioCommunicator(transmitter=fake_transmitter)
-    communicator.send(message)
-
-
-    # Then
-    assert len(fake_channel.write_buffer) > 0
-
-----
-
-=== Obstacle > La dépendance globale
-
-
-* Pattern du `Singleton`
-** Dépendance à un accès au niveau classe `MessagesCollector.get_messages()`.
-
-[source,python,attributes]
-----
-class ReportStream:
-
-    def __init__(self, out: IO[str])
-        self.out = out
-
-    def report_last_messages(self):
-        messages = MessagesCollector.get_messages()
-        if not messages:
-            return
-        for message in messages:
-            out.write(f'ID:{message.id} => {message.content}')
-----
-
-Il est très difficile de la tester ainsi.
-C'est possible, mais cela doit être laborieux.
-
-
-=== Singleton is an anti-pattern
-
-* Singleton pattern du _Gang Of Four_ 
-** S'assurer qu'une seule instance qui puisse exister.
-* Anti-pattern 
-** Difficile à adapter aux différentes situations
-** Très fort couplage à une classe
-** Un changement impact tout le système
-*** => Aucune isolation :(
-
-=== Obstacle > La dépendance globale
-
-* Analyse
-** `ReportStream` très fortement couplée à `MessagesCollector`
-** Besoin -> obtenir des évènements
-* Solution
-** Abstraction (as ever)
-** Segregation Of Interface
-*** Responsabilité => Fournir des évènements 
-** Injection de l'abstraction
-
-[{code_size}]
-[source,python,attributes]
-----
-class MessageProvider(Protocol):
-
-    def get_messages(self) -> list[Message]:
-        ...
-----
-
-=== Obstacle > La dépendance globale
-
-**Travail sur le Singleton**
-
-* Modifier `MessagesCollector`
-** Lui faire endosser l'interface `MessageProvider`
-** Lui faire retourner via un `get()` lui même
-** Permettre la modification via un `set()`
-** Transformer la méthode de classe en méthode d'instance
-
-[.left-column]
---
-[source,python,attributes]
-----
-class MessagesCollector(MessageProvider):
-
-    instance = MessagesCollector()
-
-    @classmethod
-    def get(cls, self):
-        return cls.instance
-
-    @classmethod
-    def set(cls, provider: MessageProvider):
-        cls.instance = provider
-
-    def get_messages(cls):
-        ...
-----
---
-
-[.right-column]
---
-[source,python,attributes]
-----
-class ReportStream:
-
-    def __init__(self, out: IO[str])
-        self.out = out
-
-    def report_last_messages(self):
-        messages = MessagesCollector.get().get_messages()
-        if not messages:
-            return
-        for message in messages:
-            out.write(f'ID:{message.id} => {message.content}')
-----
---
-
-=== Test en modifiant le Singleton
-
-[.left-column]
---
-[source,python,attributes]
-----
-@pytest.fixture
-def message_provider():
-    class FakeMessageProvider(MessageProvider):
-        def __init__(self):
-            self.messages = []
-
-        def get_messages(self) -> list[Message]:
-            return self.messages
-
-    # Set Up
-    fake_provider = FakeMessageProvider()
-    instance = MessagesCollector.get()
-    MessagesCollector.set(fake_provider)
-
-    yield fake_provider
-
-    # Tear Down
-    MessagesCollector.set(instance)
-----
---
-
-
-[.right-column]
---
-[source,python,attributes]
-----
-def test_print_messages(message_provider):
-    # Given
-    fake_provider = message_provider
-    out = io.StringIO
-    report = ReportStream(out)
-
-    fake_provider.messages = [Message(id=1, content='foo')]
-
-
-    # When
-    report.report_last_messages()
-
-
-    # Then
-    assert io.get_value() == 'ID:1 => foo'
-----
---
-
-[.reset-column]
-[.center]
---
-C'est mieux, mais c'est perfectible ...
---
-
-=== En injectant le fournisseur
-
-Passer du Singleton à l'injection pour se débarrasser définitivement
-
-[.left-column]
---
-[source,python,attributes]
-----
-class ReportStream:
-
-    def __init__(self, out: IO[str])
-        self.out = out
-
-    def report_last_messages(self):
-        messages = MessagesCollector.get_messages()
-        if not messages:
-            return
-        for message in messages:
-            out.write(f'ID:{message.id} => {message.content}')
-----
---
-
-[.right-column]
---
-[source,python,attributes]
-----
-class ReportStream:
+//     def read(self) -> str :
+//         return self.read_buffer.pop()
+
+//     def close(self):
+//         self.closed = True
+
+// class FakeTransmitter(RadioTransmitter):
+//     def __init__(self, fake_channel: FakeChannel):
+//         self.fake_channel = fake_channel
+
+//     def get_channel(self) -> Channel:
+//         return self.fake_channel    
+// ----
+
+// [source,python,attributes]
+// ----
+// def test_send_message():
+//     # Given
+//     fake_channel = FakeChannel()  
+//     fake_transmitter = FakeTransmitter(fake_channel)
+//     message = Message(id=123, content=f'CONTACT server=nowhere.com')
+
+
+//     # When
+//     communicator = RadioCommunicator(transmitter=fake_transmitter)
+//     communicator.send(message)
+
+
+//     # Then
+//     assert len(fake_channel.write_buffer) > 0
+
+// ----
+
+// === Obstacle > La dépendance globale
+
+
+// * Pattern du `Singleton`
+// ** Dépendance à un accès au niveau classe `MessagesCollector.get_messages()`.
+
+// [source,python,attributes]
+// ----
+// class ReportStream:
+
+//     def __init__(self, out: IO[str])
+//         self.out = out
+
+//     def report_last_messages(self):
+//         messages = MessagesCollector.get_messages()
+//         if not messages:
+//             return
+//         for message in messages:
+//             out.write(f'ID:{message.id} => {message.content}')
+// ----
+
+// Il est très difficile de la tester ainsi.
+// C'est possible, mais cela doit être laborieux.
+
+
+// === Singleton is an anti-pattern
+
+// * Singleton pattern du _Gang Of Four_ 
+// ** S'assurer qu'une seule instance qui puisse exister.
+// * Anti-pattern 
+// ** Difficile à adapter aux différentes situations
+// ** Très fort couplage à une classe
+// ** Un changement impact tout le système
+// *** => Aucune isolation :(
+
+// === Obstacle > La dépendance globale
+
+// * Analyse
+// ** `ReportStream` très fortement couplée à `MessagesCollector`
+// ** Besoin -> obtenir des évènements
+// * Solution
+// ** Abstraction (as ever)
+// ** Segregation Of Interface
+// *** Responsabilité => Fournir des évènements 
+// ** Injection de l'abstraction
+
+// [{code_size}]
+// [source,python,attributes]
+// ----
+// class MessageProvider(Protocol):
+
+//     def get_messages(self) -> list[Message]:
+//         ...
+// ----
+
+// === Obstacle > La dépendance globale
+
+// **Travail sur le Singleton**
+
+// * Modifier `MessagesCollector`
+// ** Lui faire endosser l'interface `MessageProvider`
+// ** Lui faire retourner via un `get()` lui même
+// ** Permettre la modification via un `set()`
+// ** Transformer la méthode de classe en méthode d'instance
+
+// [.left-column]
+// --
+// [source,python,attributes]
+// ----
+// class MessagesCollector(MessageProvider):
+
+//     instance = MessagesCollector()
+
+//     @classmethod
+//     def get(cls, self):
+//         return cls.instance
+
+//     @classmethod
+//     def set(cls, provider: MessageProvider):
+//         cls.instance = provider
+
+//     def get_messages(cls):
+//         ...
+// ----
+// --
+
+// [.right-column]
+// --
+// [source,python,attributes]
+// ----
+// class ReportStream:
+
+//     def __init__(self, out: IO[str])
+//         self.out = out
+
+//     def report_last_messages(self):
+//         messages = MessagesCollector.get().get_messages()
+//         if not messages:
+//             return
+//         for message in messages:
+//             out.write(f'ID:{message.id} => {message.content}')
+// ----
+// --
+
+// === Test en modifiant le Singleton
+
+// [.left-column]
+// --
+// [source,python,attributes]
+// ----
+// @pytest.fixture
+// def message_provider():
+//     class FakeMessageProvider(MessageProvider):
+//         def __init__(self):
+//             self.messages = []
+
+//         def get_messages(self) -> list[Message]:
+//             return self.messages
+
+//     # Set Up
+//     fake_provider = FakeMessageProvider()
+//     instance = MessagesCollector.get()
+//     MessagesCollector.set(fake_provider)
+
+//     yield fake_provider
+
+//     # Tear Down
+//     MessagesCollector.set(instance)
+// ----
+// --
+
+
+// [.right-column]
+// --
+// [source,python,attributes]
+// ----
+// def test_print_messages(message_provider):
+//     # Given
+//     fake_provider = message_provider
+//     out = io.StringIO
+//     report = ReportStream(out)
+
+//     fake_provider.messages = [Message(id=1, content='foo')]
+
+
+//     # When
+//     report.report_last_messages()
+
+
+//     # Then
+//     assert io.get_value() == 'ID:1 => foo'
+// ----
+// --
+
+// [.reset-column]
+// [.center]
+// --
+// C'est mieux, mais c'est perfectible ...
+// --
+
+// === En injectant le fournisseur
+
+// Passer du Singleton à l'injection pour se débarrasser définitivement
+
+// [.left-column]
+// --
+// [source,python,attributes]
+// ----
+// class ReportStream:
+
+//     def __init__(self, out: IO[str])
+//         self.out = out
+
+//     def report_last_messages(self):
+//         messages = MessagesCollector.get_messages()
+//         if not messages:
+//             return
+//         for message in messages:
+//             out.write(f'ID:{message.id} => {message.content}')
+// ----
+// --
+
+// [.right-column]
+// --
+// [source,python,attributes]
+// ----
+// class ReportStream:
 
-    def __init__(self, out: IO[str], provider: MessageProvider)
-        self.out = out
-        self.provider = provider
+//     def __init__(self, out: IO[str], provider: MessageProvider)
+//         self.out = out
+//         self.provider = provider
 
-    def report_last_messages(self):
-        messages = self.provider.get_messages()
-        if not messages:
-            return
-        for message in messages:
-            out.write(f'ID:{message.id} => {message.content}')
-----
---
+//     def report_last_messages(self):
+//         messages = self.provider.get_messages()
+//         if not messages:
+//             return
+//         for message in messages:
+//             out.write(f'ID:{message.id} => {message.content}')
+// ----
+// --
 
-=== Simplification du test
+// === Simplification du test
 
-[source,python,attributes]
-----
-class FakeMessageProvider(MessageProvider):
-    def __init__(self):
-        self.messages = []
+// [source,python,attributes]
+// ----
+// class FakeMessageProvider(MessageProvider):
+//     def __init__(self):
+//         self.messages = []
 
-    def get_messages(self) -> list[Message]:
-        return self.messages
+//     def get_messages(self) -> list[Message]:
+//         return self.messages
 
-def test_print_messages():
-    # Given
-    fake_provider = FakeMessageProvider()
-    out = io.StringIO
-    report = ReportStream(out=out, provider=fake_provider)
+// def test_print_messages():
+//     # Given
+//     fake_provider = FakeMessageProvider()
+//     out = io.StringIO
+//     report = ReportStream(out=out, provider=fake_provider)
 
-    fake_provider.messages = [Message(id=1, content='foo')]
+//     fake_provider.messages = [Message(id=1, content='foo')]
 
 
-    # When
-    report.report_last_messages()
+//     # When
+//     report.report_last_messages()
 
 
-    # Then
-    assert io.get_value() == 'ID:1 => foo'
-----
+//     # Then
+//     assert io.get_value() == 'ID:1 => foo'
+// ----
 
-[%step]
-[.reset-column]
-[.center]
---
-Oui mais dans la vraie vie ? J'ai besoin d'une unique instance !!
---
+// [%step]
+// [.reset-column]
+// [.center]
+// --
+// Oui mais dans la vraie vie ? J'ai besoin d'une unique instance !!
+// --
 
-=== Singleton, uniquement à l'injection
+// === Singleton, uniquement à l'injection
 
-[{code_size}]
-[source,python,attributes]
------
-if __name__ == "__main__":
-    # ------------------- Actual Singleton here -------------------
-    unique_message_provider = MessagesCollector.get()
-    # -------------------------------------------------------------
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// if __name__ == "__main__":
+//     # ------------------- Actual Singleton here -------------------
+//     unique_message_provider = MessagesCollector.get()
+//     # -------------------------------------------------------------
 
-    report = ReportStream(out=out, provider=unique_message_provider)
-    report.report_last_messages()
------
+//     report = ReportStream(out=out, provider=unique_message_provider)
+//     report.report_last_messages()
+// -----
 
-== Résumé
+// == Résumé
 
-[.center]
---
-*Avant*
+// [.center]
+// --
+// *Avant*
 
-image::images/report_stream-0.svg[]
---
+// image::images/report_stream-0.svg[]
+// --
 
-ifdef::mode_slide[== Résumé]
-
-[.center]
---
-*Abstraction*
-
-image::images/report_stream-1.svg[]
---
-
-ifdef::mode_slide[== Résumé]
-
-[.center]
---
-*Injection*
-
-image::images/report_stream-2.svg[]
---
-
-== Cas d'usage: Simuler une base de données
-
-* Utiliser le pattern du repository
-** Insérer une couche d'abstraction si la construction des requêtes n'est pas de la responsabilité de l'objet sous test
-
-include::_use_repository.adoc[{include_options}]
-
-
-== Obstacle > boucles imbriquées 
-
-* Priorité Single Responsability Principle
-** Boucles imbriquées avec plusieurs responsabilités mélangées
-
-[{code_size}]
-[source,python,attributes]
------
-avg_w_lug = 0
-total_p = 0
-
-for r in flight.reservations:
-    for lug in r.luggages:
-        avg_w_lug += lug.weight if not lug.cabin or 0
-    p = r.price
-    if r.discnt:
-        p = p * r.discnt
-    total_p += p
-
-avg_w_lug = avg_w_lug / len(reservations)
------
-
-[%step]
---
-Ah oui, encore une version compressée...
---
-
-ifdef::mode_slide[=== Obstacle > boucles imbriquées]
-
-En clair
-
-[{code_size}]
-[source,python,attributes]
------
-average_weight_luggage = 0
-total_price = 0
-
-for reservation in flight.reservations:
-    for luggage in reservation.luggages:
-        average_weight_luggage += luggage.weight if not luggage.in_cabin or 0
-
-    price = reservation.price 
-    if reservation.discount:
-        price = price * reservation.discount
-    total_price += price
-
-average_weight_luggage = average_weight_luggage / len(reservations)
------
-
-* Comment tester et surtout quoi tester ?
-** Responsabilités mélangées ? 
-*** Lesquelles ?
-
-ifdef::mode_slide[=== Obstacle > boucles imbriquées]
-
-* Responsabilités identifiées
-** _Calcul du poids total des baggages en soute_
-** _Calcul du prix total du vol_
-
-Réécriture
-
-[{code_size}]
-[source,python,attributes]
------
-average_weight_luggage = 0
-for reservation in flight.reservations:
-    for luggage in reservation.luggages:
-        average_weight_luggage += luggage.weight if not luggage.in_cabin or 0
-average_weight_luggage = average_weight_luggage / len(reservations)
-
-total_price = 0
-for reservation in flight.reservations:
-    price = reservation.price 
-    if reservation.discount:
-        price = price * reservation.discount
-    total_price += price
------
-
-[source,python,attributes]
------
-def test_total_weight_with_some_cabin_bagages_and_without_discount():
-    ...
-def test_total_price_with_discounts_but_no_baggages():
-    ...
------
-
-ifdef::mode_slide[=== Obstacle > boucles imbriquées]
-
-Réécriture
-
-[{code_size}]
-[source,python,attributes]
------
-def get_total_weight_of_in_hold_baggages(reservations: List[Reservation]) -> float:
-    average_weight = 0
-    for reservation in reservations:
-        for luggage in reservation.luggages:
-            average_weight += luggage.weight if not luggage.in_cabin or 0
-    average_weight = average_weight / len(reservations)
-    return average_weight
-
-def get_total_price(reservations: List[Reservation]) -> float:
-    total = 0
-    for reservation in reservations:
-        price = reservation.price 
-        if reservation.discount:
-            price = price * reservation.discount
-        total += price
-    return total
------
-[{code_size}]
-[source,python,attributes]
------
-def test_total_weight_with_some_cabin_bagages(): ...
-def test_total_weight_without_bagages(): ...    
-def test_total_price_with_some_discounts():  ...
-def test_total_price_without_discounts(): ...
------
-
-
-== Design vs performance
-
-* Un faux débat
-** => Souvent la dégradation est minime
-** => Les compilateurs sont capables d'optimiser  
-*** Python...un peu https://wiki.python.org/moin/PythonSpeed/PerformanceTips
-** Seul un profiling est pertinent
-* Ce qui compte
-** (1) Bien écrire le code.
-** (2) Vérifier qu'il est correct (passe les tests)
-** (3) Établir un profil en cas de lenteur seulement.
-** (4) Optimiser si besoin.
-** (5) Répéter à partir du point 2. 
-
-
-
-
-== Amélioration de la testabilité par la hiérarchisation
-
-include::_test_by_overloading.adoc[{include_options}]
+// ifdef::mode_slide[== Résumé]
+
+// [.center]
+// --
+// *Abstraction*
+
+// image::images/report_stream-1.svg[]
+// --
+
+// ifdef::mode_slide[== Résumé]
+
+// [.center]
+// --
+// *Injection*
+
+// image::images/report_stream-2.svg[]
+// --
+
+// == Cas d'usage: Simuler une base de données
+
+// * Utiliser le pattern du repository
+// ** Insérer une couche d'abstraction si la construction des requêtes n'est pas de la responsabilité de l'objet sous test
+
+// include::_use_repository.adoc[{include_options}]
+
+
+// == Obstacle > boucles imbriquées 
+
+// * Priorité Single Responsability Principle
+// ** Boucles imbriquées avec plusieurs responsabilités mélangées
+
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// avg_w_lug = 0
+// total_p = 0
+
+// for r in flight.reservations:
+//     for lug in r.luggages:
+//         avg_w_lug += lug.weight if not lug.cabin or 0
+//     p = r.price
+//     if r.discnt:
+//         p = p * r.discnt
+//     total_p += p
+
+// avg_w_lug = avg_w_lug / len(reservations)
+// -----
+
+// [%step]
+// --
+// Ah oui, encore une version compressée...
+// --
+
+// ifdef::mode_slide[=== Obstacle > boucles imbriquées]
+
+// En clair
+
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// average_weight_luggage = 0
+// total_price = 0
+
+// for reservation in flight.reservations:
+//     for luggage in reservation.luggages:
+//         average_weight_luggage += luggage.weight if not luggage.in_cabin or 0
+
+//     price = reservation.price 
+//     if reservation.discount:
+//         price = price * reservation.discount
+//     total_price += price
+
+// average_weight_luggage = average_weight_luggage / len(reservations)
+// -----
+
+// * Comment tester et surtout quoi tester ?
+// ** Responsabilités mélangées ? 
+// *** Lesquelles ?
+
+// ifdef::mode_slide[=== Obstacle > boucles imbriquées]
+
+// * Responsabilités identifiées
+// ** _Calcul du poids total des baggages en soute_
+// ** _Calcul du prix total du vol_
+
+// Réécriture
+
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// average_weight_luggage = 0
+// for reservation in flight.reservations:
+//     for luggage in reservation.luggages:
+//         average_weight_luggage += luggage.weight if not luggage.in_cabin or 0
+// average_weight_luggage = average_weight_luggage / len(reservations)
+
+// total_price = 0
+// for reservation in flight.reservations:
+//     price = reservation.price 
+//     if reservation.discount:
+//         price = price * reservation.discount
+//     total_price += price
+// -----
+
+// [source,python,attributes]
+// -----
+// def test_total_weight_with_some_cabin_bagages_and_without_discount():
+//     ...
+// def test_total_price_with_discounts_but_no_baggages():
+//     ...
+// -----
+
+// ifdef::mode_slide[=== Obstacle > boucles imbriquées]
+
+// Réécriture
+
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// def get_total_weight_of_in_hold_baggages(reservations: List[Reservation]) -> float:
+//     average_weight = 0
+//     for reservation in reservations:
+//         for luggage in reservation.luggages:
+//             average_weight += luggage.weight if not luggage.in_cabin or 0
+//     average_weight = average_weight / len(reservations)
+//     return average_weight
+
+// def get_total_price(reservations: List[Reservation]) -> float:
+//     total = 0
+//     for reservation in reservations:
+//         price = reservation.price 
+//         if reservation.discount:
+//             price = price * reservation.discount
+//         total += price
+//     return total
+// -----
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// def test_total_weight_with_some_cabin_bagages(): ...
+// def test_total_weight_without_bagages(): ...    
+// def test_total_price_with_some_discounts():  ...
+// def test_total_price_without_discounts(): ...
+// -----
+
+
+// == Design vs performance
+
+// * Un faux débat
+// ** => Souvent la dégradation est minime
+// ** => Les compilateurs sont capables d'optimiser  
+// *** Python...un peu https://wiki.python.org/moin/PythonSpeed/PerformanceTips
+// ** Seul un profiling est pertinent
+// * Ce qui compte
+// ** (1) Bien écrire le code.
+// ** (2) Vérifier qu'il est correct (passe les tests)
+// ** (3) Établir un profil en cas de lenteur seulement.
+// ** (4) Optimiser si besoin.
+// ** (5) Répéter à partir du point 2. 
+
+
+
+
+// == Amélioration de la testabilité par la hiérarchisation
+
+// include::_test_by_overloading.adoc[{include_options}]
 
 
 == Obstacle > Ma classe fait trop de choses 
@@ -1986,37 +1992,37 @@ image::images/testability-Mikado_2.svg[]
 * https://www.youtube.com/watch?v=xXvuBX1bVh8[Live-Refactoring de Legacy Code avec la technique du Golden Master ()]
 * https://understandlegacycode.com/blog/a-process-to-do-safe-changes-in-a-complex-codebase/[Use the Mikado Method to do safe changes in a complex codebase]
 
-[.end.background]
-[.center]
-== Améliorer la testabilité
+// [.end.background]
+// [.center]
+// == Améliorer la testabilité
 
-[.left-column]
---
-* L’échec comme premier pas.
-* Mocking
-* Legacy
-** Le cercle infernale
-** Chirurgie de guerre
-** Test de caractérisation
-* Obstacles typiques
-** Le paramètre irritant
-** La dépendance cachée
-** La dépendance globale
-** La boucle imbriquée
---
+// [.left-column]
+// --
+// * L’échec comme premier pas.
+// * Mocking
+// * Legacy
+// ** Le cercle infernale
+// ** Chirurgie de guerre
+// ** Test de caractérisation
+// * Obstacles typiques
+// ** Le paramètre irritant
+// ** La dépendance cachée
+// ** La dépendance globale
+// ** La boucle imbriquée
+// --
 
-[.right-column]
---
+// [.right-column]
+// --
 
-* Par la hiérarchisation
-** Testing par surcharge
-** Test par sous-classage
-* Responsabilités
-*** Grouper par nom
-*** Grouper par ce qui change
-*** Grouper par relations
-* Méthode MIKADO
---
+// * Par la hiérarchisation
+// ** Testing par surcharge
+// ** Test par sous-classage
+// * Responsabilités
+// *** Grouper par nom
+// *** Grouper par ce qui change
+// *** Grouper par relations
+// * Méthode MIKADO
+// --
 
 
 // end::content[]

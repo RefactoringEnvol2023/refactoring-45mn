@@ -7,57 +7,59 @@ endif::[]
 // tag::content[]
 
 
+// [.subsection.background]
+// [.center]
+// == Principes de conceptions fondamentaux
+
+// === Principes de conceptions fondamentaux
+
+// * Les principes à connaître absolument sont 
+// ** Separation of Concern
+// ** Single Responsibility Principle
+// ** Interface Segregation Principle
+
+// === Separation of concern
+
+// * Améliorer la conception > Principes fondamentaux
+// ** **=> Separation of Concern**
+// ** Single Responsibility Principle
+// ** Interface Segregation Principle
+
+// === Separation of concern
+
+// [.left-column-2-3]
+// * Séparer les composants par type de préoccupation
+// ** C'est bon, je pense qu'on a tous compris...
+// * Rangement en profondeur 
+// ** Modèle en couche
+// ** Principe d'architecture 
+// *** => Clean Architecture, Architecture Hexagonal
+// * Identifier, séparer, déplacer, regrouper...
+
+// [.right-column-1-3]
+// image::images/redux.gif[]
+
 [.subsection.background]
 [.center]
-== Principes de conceptions fondamentaux
+== Single Responsibility Principle
 
-=== Principes de conceptions fondamentaux
+L'ultime principe
 
-* Les principes à connaître absolument sont 
-** Separation of Concern
-** Single Responsibility Principle
-** Interface Segregation Principle
-
-== Separation of concern
-
-* Améliorer la conception > Principes fondamentaux
-** **=> Separation of Concern**
-** Single Responsibility Principle
-** Interface Segregation Principle
-
-=== Separation of concern
-
-[%step]
-* Séparer les composants par type de préoccupation
-** C'est bon, je pense qu'on a tous compris...
-* Rangement en profondeur 
-** Modèle en couche
-** Principe d'architecture 
-*** => Clean Architecture, Architecture Hexagonal
-* Identifier, séparer, déplacer, regrouper...
-
-image::images/redux.gif[]
-
-=== Single Responsibility Principle
-
-* Améliorer la conception > Principes fondamentaux
-** Separation of Concern
-** **=> Single Responsibility Principle**
-** Interface Segregation Principle
 
 === Single Responsibility Principle
 
 _You have one job, only one job_
 
 [.center]
+[.left-column-2-3]
 image:images/you-had-one-job.jpg[]
 
-[%step]
+[.right-column-1-3]
 * Ce principe s'applique aussi bien 
 ** aux fonctions 
 ** qu'aux classes
 
-== Responsabilité
+=== Responsabilité
 
 [quote]
 ____
@@ -95,121 +97,122 @@ ____
 Une fonction ne doit faire **qu'une** chose, une **seule** chose, mais bien.
 ____
 
-=== Illustration 
 
-[.left-column]
---
-[{code_size}]
-[source,python,attributes]
-----
-def end_process(process: Process, ctx: Context):
-    process.end() <1>
+// === Illustration 
 
-    file = ctx.get_file() <2>
-    if file: 
-        with open(file,'w') as f:
-            ... # Do something with file
-    user = ctx.get_user() <3>
-    if user: 
-        ... # Do something with user
-----
-[.smaller]
-<1> Gestion d'un process
-<2> Récupération et gestion d'un fichier
-<3> Récupération et gestion d'un utilisateur
---
+// [.left-column]
+// --
+// [{code_size}]
+// [source,python,attributes]
+// ----
+// def end_process(process: Process, ctx: Context):
+//     process.end() <1>
 
-[.right-column]
---
-[.smaller]
-* Constat
-** Gestion d'un process d'un côté
-** Gestion d'un fichier et d'un utilisateur de l'autre
---
-=== Illustration 
+//     file = ctx.get_file() <2>
+//     if file: 
+//         with open(file,'w') as f:
+//             ... # Do something with file
+//     user = ctx.get_user() <3>
+//     if user: 
+//         ... # Do something with user
+// ----
+// [.smaller]
+// <1> Gestion d'un process
+// <2> Récupération et gestion d'un fichier
+// <3> Récupération et gestion d'un utilisateur
+// --
 
-[.left-column]
---
-[{code_size}]
-[source,python,attributes]
-----
-def end_process(process: Process, ctx: Context):
-    process.end()
+// [.right-column]
+// --
+// [.smaller]
+// * Constat
+// ** Gestion d'un process d'un côté
+// ** Gestion d'un fichier et d'un utilisateur de l'autre
+// --
+// === Illustration 
 
-    save_file_alert_user(ctx) <1>
+// [.left-column]
+// --
+// [{code_size}]
+// [source,python,attributes]
+// ----
+// def end_process(process: Process, ctx: Context):
+//     process.end()
 
-def save_file_alert_user(ctx: Context): <2>
-    file = ctx.get_file()
-    user = ctx.get_user()
-    if file:
-        with open(file,'w') as f:
-            ... # Do something with file
-    if user:
-        ... # Do something with user
+//     save_file_alert_user(ctx) <1>
 
-----
-[.smaller]
-<1> Séparation des préoccupations
-<2> Création d'une fonction `save_file_alert_user`
---
+// def save_file_alert_user(ctx: Context): <2>
+//     file = ctx.get_file()
+//     user = ctx.get_user()
+//     if file:
+//         with open(file,'w') as f:
+//             ... # Do something with file
+//     if user:
+//         ... # Do something with user
 
-[.right-column]
---
-* Mais `save_file_alert_user` ...
-** n'est pas réutilisable en dehors de ce cas d'usage
-** fait deux choses très différentes
-** => 2 domaines d'expertise impliqués
-*** _Spécialiste de la sauvegarde des fichiers_ 
-***  _Spécialiste des communications avec l'utilisateur_
---
-=== Illustration 
+// ----
+// [.smaller]
+// <1> Séparation des préoccupations
+// <2> Création d'une fonction `save_file_alert_user`
+// --
 
-[{code_size}]
-[source,python,attributes]
-----
-def end_process(process: Process, ctx: Context):
-    process.end()
-    save_file(ctx.get_file()) <1>
-    alert_user(ctx.get_user()) <2>
+// [.right-column]
+// --
+// * Mais `save_file_alert_user` ...
+// ** n'est pas réutilisable en dehors de ce cas d'usage
+// ** fait deux choses très différentes
+// ** => 2 domaines d'expertise impliqués
+// *** _Spécialiste de la sauvegarde des fichiers_ 
+// ***  _Spécialiste des communications avec l'utilisateur_
+// --
+// === Illustration 
 
-def save_file(file): <1>
-    if file:
-        with open(file,'w') as f:
-            ... # Do something with file
-def alert_user(user): <2>
-    if user:
-        ... # Do something with user
-----
-[.smaller]
-<1> `save_file` relève du domaine d'expertise _Spécialiste de la sauvegarde des fichiers_  et lui seul
-<2> `alert_user` relève du domaine d'expertise _Spécialiste des communications avec l'utilisateur_ et lui seul
+// [{code_size}]
+// [source,python,attributes]
+// ----
+// def end_process(process: Process, ctx: Context):
+//     process.end()
+//     save_file(ctx.get_file()) <1>
+//     alert_user(ctx.get_user()) <2>
 
-=== Illustration 
+// def save_file(file): <1>
+//     if file:
+//         with open(file,'w') as f:
+//             ... # Do something with file
+// def alert_user(user): <2>
+//     if user:
+//         ... # Do something with user
+// ----
+// [.smaller]
+// <1> `save_file` relève du domaine d'expertise _Spécialiste de la sauvegarde des fichiers_  et lui seul
+// <2> `alert_user` relève du domaine d'expertise _Spécialiste des communications avec l'utilisateur_ et lui seul
 
-[{code_size}]
-[source,python,attributes]
-----
-def end_process(process: Process, ctx: Context):
-    process.end()
-    do_post_process(ctx) <1>
+// === Illustration 
 
-def do_post_process(ctx: Context): <2>
-    save_file(ctx.get_file())
-    alert_user(ctx.get_user())
+// [{code_size}]
+// [source,python,attributes]
+// ----
+// def end_process(process: Process, ctx: Context):
+//     process.end()
+//     do_post_process(ctx) <1>
 
-def save_file(file): <3>
-    if file:
-        with open(file,'w') as f:
-            ... # Do something with file
-def alert_user(user): <4>
-    if user:
-        ... # Do something with user
-----
-[.smaller]
-<1> Introduction de `do_post_process`
-<2> `do_post_process` cache des détails sans importance du point de vue du _Spécialiste de la gestion des processus_ mais est *adaptable* suivant les situations.
-<3> `save_file` fait une seule chose, mais bien
-<4> `alert_user` fait une seule chose, mais bien
+// def do_post_process(ctx: Context): <2>
+//     save_file(ctx.get_file())
+//     alert_user(ctx.get_user())
+
+// def save_file(file): <3>
+//     if file:
+//         with open(file,'w') as f:
+//             ... # Do something with file
+// def alert_user(user): <4>
+//     if user:
+//         ... # Do something with user
+// ----
+// [.smaller]
+// <1> Introduction de `do_post_process`
+// <2> `do_post_process` cache des détails sans importance du point de vue du _Spécialiste de la gestion des processus_ mais est *adaptable* suivant les situations.
+// <3> `save_file` fait une seule chose, mais bien
+// <4> `alert_user` fait une seule chose, mais bien
 
 
 === Single Responsibility Principe > classe
@@ -343,370 +346,370 @@ image::images/SRP_sensor_3.svg[]
 * Analogie de l'expert 
 ** Puis-je en parler comme d'une personne ? 
 
-== Interface Segregation Principle 
+// == Interface Segregation Principle 
 
-* Améliorer la conception > Principes fondamentaux
-** Separation of Concern
-** Single Responsibility Principle
-** **=> Interface Segregation Principle**
+// * Améliorer la conception > Principes fondamentaux
+// ** Separation of Concern
+// ** Single Responsibility Principle
+// ** **=> Interface Segregation Principle**
 
-== Interface Segregation Principle 
+// == Interface Segregation Principle 
 
-* Un module => plusieurs aspects
-** Un utilisateur ne les connait pas tous
-* *Interface Segregation Principle*
-** => Offrir plusieurs facettes
-** => Laisser l'utilisateur utiliser celle qui lui importe
-*** => Dont les évolutions ont une importance pour lui
+// * Un module => plusieurs aspects
+// ** Un utilisateur ne les connait pas tous
+// * *Interface Segregation Principle*
+// ** => Offrir plusieurs facettes
+// ** => Laisser l'utilisateur utiliser celle qui lui importe
+// *** => Dont les évolutions ont une importance pour lui
 
-include::_interface_segregation_principle_illustration.adoc[]
+// include::_interface_segregation_principle_illustration.adoc[]
 
-== Interface Segregation Principle 
+// == Interface Segregation Principle 
 
-//[.center]
-image::images/ISP_big_class.svg[]
+// //[.center]
+// image::images/ISP_big_class.svg[]
 
-[NOTE.notes]
---
-Dans le cas des grandes classes, cela permet de limiter sévèrement la connaissance, donc le couplage, donc les effets de bords.
---
+// [NOTE.notes]
+// --
+// Dans le cas des grandes classes, cela permet de limiter sévèrement la connaissance, donc le couplage, donc les effets de bords.
+// --
 
 
-== Interface Segregation Principle et refactorisation
+// == Interface Segregation Principle et refactorisation
 
-* `Extract interface`
-* `Extract superclass`
+// * `Extract interface`
+// * `Extract superclass`
 
 
-=== Composition Over Inheritance
+// === Composition Over Inheritance
 
-* Héritage 
-** Mécanisme très puissant de modélisation
-* Attention piège !
-** Couplage entre classes
-*** => Evolution classe mère => évolution classe fille
-** Tendance à faire des héritages très profonds
+// * Héritage 
+// ** Mécanisme très puissant de modélisation
+// * Attention piège !
+// ** Couplage entre classes
+// *** => Evolution classe mère => évolution classe fille
+// ** Tendance à faire des héritages très profonds
 
-ifdef::mode_slide[=== Composition Over Inheritance]
+// ifdef::mode_slide[=== Composition Over Inheritance]
 
---
-* Héritage
-** Relation **EST UN**
-** Un  _poste de travail_ **est une** _personne_
-
-[{code_size}]
-[source,python,attributes]
-----
-class Person:
-    def __init__(self, title: str, name: str, age: int):
-        self.title = title
-        self.name = name
-        self.age = age
-
-
-class Assignment(Person):
-    def __init__(self, title: str, name: str, age: int, function_name):
-        super().__init__(title, name, age)
-        self.function_name = function_name
-----
---
-
-ifdef::mode_slide[=== Composition Over Inheritance]
-
---
-* Composition
-** Relation **A UN** ou **UTILISE UN** ou **EST COMPOSE DE**
-** Un _poste de travail_ **est composé de** une personne _et_ d'une fonction.
-
-[{code_size}]
-[source,python,attributes]
-----
-class Person:
-    def __init__(self, title: str, name: str, age: int):
-        self.title = title
-        self.name = name
-        self.age = age
-
-
-class Assignment:
-    def __init__(self, person: Person, function_name: str):
-        self.person = person
-        self.function_name = function_name
-----
---
-
-
-[NOTE.notes]
---
-Chez les développeurs et développeuses peu expérimenté(e)s ou n'étant pas très bien formé(e)s à la programmation objet, c'est un écueil souvent rencontré.
-Il s'ensuit des héritages lourds à transporter, des responsabilités mal distribuées, et une difficulté de maintenance avérée.
-
-Le couplage étroit fourni par l'héritage fait que l'implémentation d'une sous-classe est très liée à l'implémentation d'une super-classe, de sorte que tout changement dans l'implémentation de la classe mère obligera la sous-classe à changer.
---
-
-== Composition et responsabilités
-
-* A chacun son expertise
-** => Facilite l'identification des responsabilité.
-* A chacun ses tests
-** => Responsabilité limitée => Test facilité
-* A chacun sa généalogie
-** => Evite des héritages encombrants
-
-== Dependency Inversion Principle
-
-* Synthèse logique
-** _Single Responsibility Principle_ => Chacun son job
-** _Composition_ => Assembler les bons composants
-** _Abstraction_ => ne dépendre que du contrat
-* Qui des deux doit s'adapter à l'autre ?
-** Le composant de haut-niveau ou celui de bas-niveau ?
-
-== Dependency Inversion Principle > Niveaux
-
-* Niveaux ?
-** Haut-niveau -> proche de l'humain, fondamental pour le métier, important
-** Bas-niveau -> proche de la machine, éloigné du métier, accessoire
-* Exemples
-** Haut-niveau:  Entités métier ("Employé", "Observation", "Protocol expérimental")
-** Bas-niveau: Briques informatiques ("Oracle", "MySQL" ou "MongoDB" ?)  
-
-== Dependency Inversion Principle > Approche classique 
-
-Utilisation directe
-
-[.left-column]
---
-[.center]
-image::images/design-DIP_a.svg[]
---
-
-
-[.right-column]
---
-[.center]
-Couplage à la version v1
-[{code_size}]
-[source,python,attributes]
------
-@dataclass
-class SurveyService:
-    persistence: BigOneDBv1
------
-[.center]
-Couplage à la version v4
-[{code_size}]
-[source,python,attributes]
------
-@dataclass
-class SurveyService:
-    persistence: BigOneDBv4
------
---
-
-== Dependency Inversion Principle > Abstraction par le bas 
-
-BigOne: _"L'abstraction, c'est bon, mangez-en !"_
-
-[.left-column]
---
-[.center]
-image::images/design-DIP_0.svg[]
---
-
-
-[.right-column]
---
-[.center]
-BigOne propose une interface
-[{code_size}]
-[source,python,attributes]
------
-@dataclass
-class SurveyService:
-    persistence: BigOneDBInterface
------
-[.center]
-IT: _"Oui mais bon, AltBD, c'est mieux c'est open source !"_
-[{code_size}]
-[source,python,attributes]
------
-@dataclass
-class SurveyService:
-    persistence: AltDBInterface
------
---
-
-
-== Dependency Inversion Principle > Abstraction par le haut 
-
-Architecte du Survey : _"Stop, voici mes attentes, point barre"_
-
-[.left-column]
---
-[.center]
-image::images/design-DIP_1.svg[]
---
-
-
-[.right-column]
---
-[.center]
-SurveyService expose ses attentes
-[{code_size}]
-[source,python,attributes]
------
-@dataclass
-class SurveyService:
-    persistence: SurveyPersistence
------
-[.center]
-Les fournisseurs DB doivent y répondre
-[{code_size}]
-[source,python,attributes]
------
-class AltDBInterface(SurveyPersistence):
-    ...
-
-class BigOneDBInterface(SurveyPersistence):
-    ...
-
------
---
-
-
-== Dependency Inversion Principle > Adapter 
-
-Ok, BigOne ne va pas vraiment s'adapter à nous. Coupons la poire en deux.
-
-
-[.left-column]
---
-[.center]
-image::images/design-DIP_2.svg[]
---
-
-
-[.right-column]
---
-[.center]
-SurveyService expose ses attentes
-[{code_size}]
-[source,python,attributes]
------
-@dataclass
-class SurveyService:
-    persistence: SurveyPersistence
------
-
-[.center]
-[{code_size}]
-[source,python,attributes]
------
-class SurveyPersistenceBigOneAdapter(SurveyPersistence):
-    def __init__(self, db: BigOneDBInterface):
-        ...
-class SurveyPersistenceAltAdapter(SurveyPersistence):
-    def __init__(self, db: AltDBInterface):
-        ...
-
------
---
-
-
-
-== Pour aller plus loin
-
-**Compétence majeure / Pratique régulière > Expertise**
-
-* Principes et Design patterns
-* Gang Of Four
-* Grasp
-
-
-=== Design Patterns > Gang of Four
-
-* Design Patterns orientés Conception
-** Assez près du code => Solution refactoring le nez dans le code
-** Pensés OOP (C++/Java) => à adapter à l'écosystème utilisé
-
-[%step]
-[.smaller]
-[.left-column-1-3]
---
-* Patrons de création
-** Singleton, Prototype
-** Fabrique, Fabrique abstraite
-** Monteur
---
-
-[%step]
-[.smaller]
-[.middle-column-1-3]
---
-* Patrons de structure
-** Pont, Façade
-** Adaptateur, Proxy
-** Objet composite
-** Poids-mouche
-** Décorateur
---
-[%step]
-[.smaller]
-[.right-column-1-3]
---
-* Patrons de comportement
-** Chaîne de responsabilité
-** Commande, Interpréteur
-** Itérateur, Médiateur
-** Mémento, Observateur
-** État, Stratégie
-** Patron de méthode, Visiteur
---
-
-[%step]
-[.reset-column]
---
-* Références
-** https://refactoring.guru/design-patterns[Refactoring.guru Design-patterns^]
-** https://python-patterns.guide/[https://python-patterns.guide/^]
-** https://fr.wikibooks.org/wiki/Patrons_de_conception/Patrons_du_%C2%AB_Gang_of_Four_%C2%BB[Wikibook Patrons de Conceptions Gang Of Four^]
---
-
-=== General Responsibility Assignment Software Patterns (GRASP)
-
-* Design Patterns orientés Architecture
-** Assez abstrait => Solution d'ordre général **MAIS** aide à se poser _les bonnes questions_
-** Pour développeurs/développeuses **ET** architectes.
-
-[%step]
-[.smaller]
-[.left-column]
---
-* Principes
-** Expert en information
-** Créateur
-** Faible couplage
-** Forte cohésion
---
-
-[%step]
-[.smaller]
-[.right-column]
---
-* Pattern
-** Fabrication pure
-** Indirection
-** Protection des variations
-** Polymorphisme
-** Contrôleur
---
-
-[%step]
-[.reset-column]
---
-* Références
-** https://fr.wikibooks.org/wiki/Patrons_de_conception/Patrons_GRASP[Wikibook Patrons de Conceptions GRASP^]
-** https://perso.univ-lyon1.fr/lionel.medini/enseignement/M1IF01/CM-patterns.pdf[Cours de Lionel MEDINI^]
---
+// --
+// * Héritage
+// ** Relation **EST UN**
+// ** Un  _poste de travail_ **est une** _personne_
+
+// [{code_size}]
+// [source,python,attributes]
+// ----
+// class Person:
+//     def __init__(self, title: str, name: str, age: int):
+//         self.title = title
+//         self.name = name
+//         self.age = age
+
+
+// class Assignment(Person):
+//     def __init__(self, title: str, name: str, age: int, function_name):
+//         super().__init__(title, name, age)
+//         self.function_name = function_name
+// ----
+// --
+
+// ifdef::mode_slide[=== Composition Over Inheritance]
+
+// --
+// * Composition
+// ** Relation **A UN** ou **UTILISE UN** ou **EST COMPOSE DE**
+// ** Un _poste de travail_ **est composé de** une personne _et_ d'une fonction.
+
+// [{code_size}]
+// [source,python,attributes]
+// ----
+// class Person:
+//     def __init__(self, title: str, name: str, age: int):
+//         self.title = title
+//         self.name = name
+//         self.age = age
+
+
+// class Assignment:
+//     def __init__(self, person: Person, function_name: str):
+//         self.person = person
+//         self.function_name = function_name
+// ----
+// --
+
+
+// [NOTE.notes]
+// --
+// Chez les développeurs et développeuses peu expérimenté(e)s ou n'étant pas très bien formé(e)s à la programmation objet, c'est un écueil souvent rencontré.
+// Il s'ensuit des héritages lourds à transporter, des responsabilités mal distribuées, et une difficulté de maintenance avérée.
+
+// Le couplage étroit fourni par l'héritage fait que l'implémentation d'une sous-classe est très liée à l'implémentation d'une super-classe, de sorte que tout changement dans l'implémentation de la classe mère obligera la sous-classe à changer.
+// --
+
+// == Composition et responsabilités
+
+// * A chacun son expertise
+// ** => Facilite l'identification des responsabilité.
+// * A chacun ses tests
+// ** => Responsabilité limitée => Test facilité
+// * A chacun sa généalogie
+// ** => Evite des héritages encombrants
+
+// == Dependency Inversion Principle
+
+// * Synthèse logique
+// ** _Single Responsibility Principle_ => Chacun son job
+// ** _Composition_ => Assembler les bons composants
+// ** _Abstraction_ => ne dépendre que du contrat
+// * Qui des deux doit s'adapter à l'autre ?
+// ** Le composant de haut-niveau ou celui de bas-niveau ?
+
+// == Dependency Inversion Principle > Niveaux
+
+// * Niveaux ?
+// ** Haut-niveau -> proche de l'humain, fondamental pour le métier, important
+// ** Bas-niveau -> proche de la machine, éloigné du métier, accessoire
+// * Exemples
+// ** Haut-niveau:  Entités métier ("Employé", "Observation", "Protocol expérimental")
+// ** Bas-niveau: Briques informatiques ("Oracle", "MySQL" ou "MongoDB" ?)  
+
+// == Dependency Inversion Principle > Approche classique 
+
+// Utilisation directe
+
+// [.left-column]
+// --
+// [.center]
+// image::images/design-DIP_a.svg[]
+// --
+
+
+// [.right-column]
+// --
+// [.center]
+// Couplage à la version v1
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// @dataclass
+// class SurveyService:
+//     persistence: BigOneDBv1
+// -----
+// [.center]
+// Couplage à la version v4
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// @dataclass
+// class SurveyService:
+//     persistence: BigOneDBv4
+// -----
+// --
+
+// == Dependency Inversion Principle > Abstraction par le bas 
+
+// BigOne: _"L'abstraction, c'est bon, mangez-en !"_
+
+// [.left-column]
+// --
+// [.center]
+// image::images/design-DIP_0.svg[]
+// --
+
+
+// [.right-column]
+// --
+// [.center]
+// BigOne propose une interface
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// @dataclass
+// class SurveyService:
+//     persistence: BigOneDBInterface
+// -----
+// [.center]
+// IT: _"Oui mais bon, AltBD, c'est mieux c'est open source !"_
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// @dataclass
+// class SurveyService:
+//     persistence: AltDBInterface
+// -----
+// --
+
+
+// == Dependency Inversion Principle > Abstraction par le haut 
+
+// Architecte du Survey : _"Stop, voici mes attentes, point barre"_
+
+// [.left-column]
+// --
+// [.center]
+// image::images/design-DIP_1.svg[]
+// --
+
+
+// [.right-column]
+// --
+// [.center]
+// SurveyService expose ses attentes
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// @dataclass
+// class SurveyService:
+//     persistence: SurveyPersistence
+// -----
+// [.center]
+// Les fournisseurs DB doivent y répondre
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// class AltDBInterface(SurveyPersistence):
+//     ...
+
+// class BigOneDBInterface(SurveyPersistence):
+//     ...
+
+// -----
+// --
+
+
+// == Dependency Inversion Principle > Adapter 
+
+// Ok, BigOne ne va pas vraiment s'adapter à nous. Coupons la poire en deux.
+
+
+// [.left-column]
+// --
+// [.center]
+// image::images/design-DIP_2.svg[]
+// --
+
+
+// [.right-column]
+// --
+// [.center]
+// SurveyService expose ses attentes
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// @dataclass
+// class SurveyService:
+//     persistence: SurveyPersistence
+// -----
+
+// [.center]
+// [{code_size}]
+// [source,python,attributes]
+// -----
+// class SurveyPersistenceBigOneAdapter(SurveyPersistence):
+//     def __init__(self, db: BigOneDBInterface):
+//         ...
+// class SurveyPersistenceAltAdapter(SurveyPersistence):
+//     def __init__(self, db: AltDBInterface):
+//         ...
+
+// -----
+// --
+
+
+
+// == Pour aller plus loin
+
+// **Compétence majeure / Pratique régulière > Expertise**
+
+// * Principes et Design patterns
+// * Gang Of Four
+// * Grasp
+
+
+// === Design Patterns > Gang of Four
+
+// * Design Patterns orientés Conception
+// ** Assez près du code => Solution refactoring le nez dans le code
+// ** Pensés OOP (C++/Java) => à adapter à l'écosystème utilisé
+
+// [%step]
+// [.smaller]
+// [.left-column-1-3]
+// --
+// * Patrons de création
+// ** Singleton, Prototype
+// ** Fabrique, Fabrique abstraite
+// ** Monteur
+// --
+
+// [%step]
+// [.smaller]
+// [.middle-column-1-3]
+// --
+// * Patrons de structure
+// ** Pont, Façade
+// ** Adaptateur, Proxy
+// ** Objet composite
+// ** Poids-mouche
+// ** Décorateur
+// --
+// [%step]
+// [.smaller]
+// [.right-column-1-3]
+// --
+// * Patrons de comportement
+// ** Chaîne de responsabilité
+// ** Commande, Interpréteur
+// ** Itérateur, Médiateur
+// ** Mémento, Observateur
+// ** État, Stratégie
+// ** Patron de méthode, Visiteur
+// --
+
+// [%step]
+// [.reset-column]
+// --
+// * Références
+// ** https://refactoring.guru/design-patterns[Refactoring.guru Design-patterns^]
+// ** https://python-patterns.guide/[https://python-patterns.guide/^]
+// ** https://fr.wikibooks.org/wiki/Patrons_de_conception/Patrons_du_%C2%AB_Gang_of_Four_%C2%BB[Wikibook Patrons de Conceptions Gang Of Four^]
+// --
+
+// === General Responsibility Assignment Software Patterns (GRASP)
+
+// * Design Patterns orientés Architecture
+// ** Assez abstrait => Solution d'ordre général **MAIS** aide à se poser _les bonnes questions_
+// ** Pour développeurs/développeuses **ET** architectes.
+
+// [%step]
+// [.smaller]
+// [.left-column]
+// --
+// * Principes
+// ** Expert en information
+// ** Créateur
+// ** Faible couplage
+// ** Forte cohésion
+// --
+
+// [%step]
+// [.smaller]
+// [.right-column]
+// --
+// * Pattern
+// ** Fabrication pure
+// ** Indirection
+// ** Protection des variations
+// ** Polymorphisme
+// ** Contrôleur
+// --
+
+// [%step]
+// [.reset-column]
+// --
+// * Références
+// ** https://fr.wikibooks.org/wiki/Patrons_de_conception/Patrons_GRASP[Wikibook Patrons de Conceptions GRASP^]
+// ** https://perso.univ-lyon1.fr/lionel.medini/enseignement/M1IF01/CM-patterns.pdf[Cours de Lionel MEDINI^]
+// --
 // end::content[]

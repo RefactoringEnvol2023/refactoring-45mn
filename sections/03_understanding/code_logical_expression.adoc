@@ -7,7 +7,15 @@ endif::[]
 
 // tag::content[]
 
-== Les imbrications
+== Compréhension et imbrications
+
+Exemple de technique de refactoring en vue de l'amélioration de la compréhension.
+
+* `Replace Nested Conditional with Guard Clause`
+* `Decompose Conditional`
+
+
+=== Les imbrications
 
 [quote, Linus Torvalds]
 ____
@@ -23,7 +31,7 @@ ____
 ** L'intention est noyée
 
 
-== Les imbrications: Exemple
+=== Les imbrications: Exemple
 
 [.left-column]
 --
@@ -82,7 +90,7 @@ def find_rental_car(departure: Location, nb_places: int, from_date: datetime, to
 ----
 --
 
-== Les imbrications > Aplatir
+=== Les imbrications > Aplatir
 
 * Se débarrasser des cas négatifs
 ** `break`, `continue`, `return`, ...
@@ -112,7 +120,7 @@ def find_rental_car(departure: Location, nb_places: int, from_date: datetime, to
     return None
 ----
 
-== Decompose Conditional
+=== Decompose Conditional
 
 * Extraire les décisions dans des fonctions 
 ** Utilisation de `Extract methods`
@@ -151,7 +159,7 @@ def are_rentals_within_time_frame(last_rental: Rental, next_rental: Rental,
     ...
 ----
 
-== Decompose Conditional
+=== Decompose Conditional
 
 * Amélioration de la testabilité
 ** Chaque fonction peut être testée à part

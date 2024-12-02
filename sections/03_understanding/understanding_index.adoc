@@ -72,18 +72,19 @@ que vous ne l'*écrivez*.
 [.fragment]
 * et pour le **réécrire**.
 
-== Rendre le code lisible 
+== Comment rendre le code lisible ? 
 
 * Donner des *bons* noms aux éléments du code 
 ** Les choses n'existent pour notre cerveau que si elles ont un nom qui lui parle.
-* Diviser en petits paragraphes ciblés
+* Découper en petits paragraphes ciblés
 ** Pour garder le cerveau focalisé et éviter qu'il ne se perde dans les détails.
+
 
 include::code_is_text_naming.adoc[{include_options}]
 
 include::code_well_targeted.adoc[{include_options}]
 
-include::code_typing.adoc[{include_options}]
+//include::code_typing.adoc[{include_options}]
 
 include::code_logical_expression.adoc[{include_options}]
 
@@ -105,19 +106,19 @@ Nous avons vu
 ** Fonction trop longue
 ** Longue liste de paramètres
 
-== Exercice
+// == Exercice
 
-[.simple]
-* Se mettre par deux
-* Cloner le projet https://github.com/RefactoringEnvol2023/01_understanding_exercice.git
-* Créer un environnement virtuel
-** `python -m venv .venv --prompt "exo01`
-* Activez le 
-** Linux/MacOS => `source .venv/bin/activate`
-** Windows => `.venv/Script/Active.ps1`
-*** En cas de problème : `Set-ExecutionPolicy Unrestricted -Scope Process`
-* Vérifier que vous êtes sur la branche `RAW`
-* **Installer les dépendances** `pip install -e .[dev]`
-* Dans un shell lancer la commande `ptw --now tests`
-* Lire le README.md
+// [.simple]
+// * Se mettre par deux
+// * Cloner le projet https://github.com/RefactoringEnvol2023/01_understanding_exercice.git
+// * Créer un environnement virtuel
+// ** `python -m venv .venv --prompt "exo01`
+// * Activez le 
+// ** Linux/MacOS => `source .venv/bin/activate`
+// ** Windows => `.venv/Script/Active.ps1`
+// *** En cas de problème : `Set-ExecutionPolicy Unrestricted -Scope Process`
+// * Vérifier que vous êtes sur la branche `RAW`
+// * **Installer les dépendances** `pip install -e .[dev]`
+// * Dans un shell lancer la commande `ptw --now tests`
+// * Lire le README.md
 // end::content[]

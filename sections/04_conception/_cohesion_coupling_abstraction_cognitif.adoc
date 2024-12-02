@@ -1,0 +1,385 @@
+= Cohésion et couplage
+ifndef::imagesdir[:imagesdir: ../..]
+
+// tag::content[]
+
+== Cohésion, Couplage et Abstraction > Qualité logicielle
+
+// * Maintenabilité
+// ** Optimiser mobilisation des ressources et connaissances nécessaires
+// *** Comprendre
+// *** Analyser
+// *** Localiser
+// *** Modifier
+// *** Tester
+
+* Cohésion, Couplage et Abstraction
+** Indicateurs cognitifs
+
+
+// == Cohésion et couplage
+
+// Ces concepts s'appliquent à tous les niveaux de l'architecture logicielle
+
+// [.simple]
+// * Structures de données, classes (OOP)
+// * Packages, modules (python), librairies, espace de nommage
+// * Fichiers sources (.c, .h)
+// * Projets, applications
+// * Services
+// * Dépôts (git, svn)
+// * ...
+
+== Cohésion > Concentration cognitive
+
+[.left-column]
+--
+* Cohérence interne
+** Regrouper, en une entité, les éléments en relation
+* Typiquement
+** Les données et les évènements invoqués ensemble
+** Les données manipulées ensemble
+** Les traitements liés
+** Les concepts proches
+--
+
+[.right-column]
+* Bilan
+** Facilite la compréhension
+** Facilite la localisation
+** Facilite l'analyse
+** Facilite la modification
+*** Les choses qui changent ensemble sont regroupées ensemble
+
+[.reset-column]
+[.center]
+*La cohésion, c'est bien !*
+
+
+=== Couplage > Dispersion cognitive
+
+[.left-column]
+--
+* Dépendance externe
+** Dépendre d'informations d'autres modules
+* Souvent une nécessité
+** Coopération nécessaire 
+*** Pour atteindre des objectifs de haut-niveau
+** Optimisation domaine de compétence 
+*** Délégation en dehors
+*** Focalisation en dedans
+--
+
+
+[.right-column]
+* Bilan
+** Pénalise l'analyse et la compréhension
+*** Diminution autosuffisance
+*** Dispersion de la connaissance nécessaire
+** Pénalise la testabilité
+** Pénalise la modification
+*** Effet dominos
+
+[.reset-column]
+[.center]
+*Le couplage, c'est pas bien !*
+
+
+[NOTE.notes]
+--
+Le couplage est bien une mesure de la dépendance à des éléments extérieurs. La façon dont des éléments, à l'intérieur d'un module, dépendent mutuellement les uns des autres, est aussi une forme de couplage, mais à une échelle différente.
+
+En effet, il est possible de considérer les éléments du module comme des modules eux-mêmes, mais nous sommes alors à une échelle plus fine.
+
+Nous déléguerons cette analyse à un autre moment.
+
+"Ce qui se passe à Las Vegas reste à Las Vegas"
+--
+
+// === Couplage > Illustration du risque
+
+// [.center]
+// --
+// Soit un composant de type *A* 
+// _utilisant_ 
+// un composant de type *B*.
+
+// *A* est obligé de savoir ce qu'est *B*.
+
+// image::images/flexibility-bound2interface_0.svg[{image_options}]
+
+// Il y a  un *_couplage_* entre *A* et *B*.
+// --
+
+
+// ifdef::mode_slide[]
+// [transition=fade]
+// === Couplage > Illustration du risque
+// endif::[]
+
+// ifndef::mode_slide[*Illustration étape {counter:CONTRAT_SCHEMA_STEP}*]
+
+
+// [.center]
+// --
+// Si *B* change, *A* est probablement obliger de  s'_adapter_.
+
+// image::images/flexibility-bound2interface_1.svg[{image_options}]
+
+// Autrement dit, le problème de *B* se _propage_ à *A*.
+// --
+
+// ifdef::mode_slide[]
+// [transition=fade]
+// === Couplage > Illustration du risque
+// endif::[]
+
+// ifndef::mode_slide[*Illustration étape {counter:CONTRAT_SCHEMA_STEP}*]
+
+// [.center]
+// Sur une chaîne de dépendance...
+// [.left-column-1-3]
+// [.center]
+// --
+// image::images/flexibility-bound2interface_propagation_0.svg[]
+// --
+
+// [.middle-column-1-3]
+// [.center]
+// --
+// Toute modification _risque_ de propager  
+// *une obligation de s'adapter* 
+// à l'ensemble de la chaîne.
+
+
+// ****
+// Le couplage induit un risque de {cr}
+// _réaction en chaîne_.
+// ****
+
+
+// --
+
+// [.right-column-1-3]
+// [.center]
+// --
+// image::images/flexibility-bound2interface_propagation_1.svg[]
+// --
+
+// [NOTE.notes]
+// --
+// Un problème très lointain impacte un composant qui n'a rien à voir avec le problème initial.
+
+// --
+
+=== Cohésion et couplage > Gestion de la connaissance
+
+[.left-column]
+--
+* Cohésion
+** Vision *intra*-module
+** *Minimisation* de la connaissance nécessaire
+*** *Concentration* sur un domaine d'expertise, 
+*** À l'*intérieur* de ses frontières
+
+[.center]
+image::images/design-cohesion_vs_coupling_0.png[height=300]
+--
+
+[.right-column]
+--
+* Couplage
+** Vision *inter*-modules
+** *Augmentation* de la connaissance nécessaire
+*** *Dispersion* au delà du domaine d'expertise, 
+*** À l'*extérieur* des frontières
+
+[.center]
+image::images/design-cohesion_vs_coupling_1.png[height=300]
+//xref:annexes#pressman[Voir "Types de cohésion et de couplage" dans les annexes]
+--
+
+
+=== Abstraction de l'interface > Minimisation cognitive
+
+[.left-column]
+--
+* Utilisateur du module
+** Minimisation des *connaissances*
+** => _Que dois-je *savoir* au minimum pour *utiliser* ce module ?_
+--
+
+[.right-column]
+--
+* Concepteur du module
+** Minimisation de l'*exposition*
+** => _Que dois-je *montrer* au minimum pour *être utilisable* ?_
+--
+
+[.reset-column]
+[.center]
+--
+image::images/design-cohesion_vs_coupling_2.png[height=300]
+
+**L'abstraction, c'est bien**
+--
+
+=== Abstraction de l'interface  > Découplage
+
+****
+L'*abstraction de l'interface*, si elle a valeur de *contrat* entre utilisateur et concepteur, permet **de minimiser le couplage**.
+****
+
+[.center]
+image::images/ezgif.com-optimize.gif[]
+
+// ifdef::mode_slide[]
+// [transition=fade]
+// === Découplage et abstraction > Illustration
+// endif::[]
+
+// ifndef::mode_slide[*Illustration étape {counter:CONTRAT_SCHEMA_STEP}*]
+
+
+
+// [.left-column]
+// [.center]
+// --
+// * **Contrat** d'interface d'un "Navigateur Web" 
+// ** _Accéder à un contenu à partir d'une URL_
+// ** _Afficher un contenu HTML_
+// ** _Soumettre un formulaire HTTP_
+// ** ...
+// * Vous êtes bien découplé d'un navigateur précis ?
+// --
+
+// [.right-column]
+// --
+// image::images/browser_contract.gif[]
+// --
+
+
+
+// ifdef::mode_slide[]
+// [transition=fade]
+// === Découplage et abstraction > Illustration
+// endif::[]
+
+// ifndef::mode_slide[*Illustration étape {counter:CONTRAT_SCHEMA_STEP}*]
+
+// [.center]
+// --
+
+// Pour ne **PAS être couplé** à sa dépendance *B*, {cr}
+// *A* ne doit *PAS dépendre* de ce qu'*EST* sa dépendance, {cr}
+// mais du *contrat que RESPECTE* sa dépendance.
+
+// image::images/flexibility-bound2interface_2.svg[{image_options}]
+
+// Contrat = {cr}
+// abstraction de l'interface {cr}
+// Déclaration d'intention
+
+// --
+
+
+// ifdef::mode_slide[]
+// [transition=fade]
+// === Découplage et abstraction > Illustration
+// endif::[]
+
+// ifndef::mode_slide[*Illustration étape {counter:CONTRAT_SCHEMA_STEP}*]
+
+
+// [.center]
+// --
+// Donc, tant que le composant *B* *_respecte_* le contrat, {cr}
+// il peut être _n'importe quoi_.
+
+// image::images/flexibility-bound2interface_3.svg[{image_options}]
+
+// *_Respecter_* le contrat {cr} 
+// => *Respecter la déclaration d'intention* {cr}
+// => *implémenter* le contrat.
+
+// --
+
+// ifdef::mode_slide[]
+// [transition=fade]
+// === Découplage et abstraction > Illustration
+// endif::[]
+
+// ifndef::mode_slide[*Illustration étape {counter:CONTRAT_SCHEMA_STEP}*]
+
+
+// [.left-column]
+// [.center]
+// --
+// Tant que le composant *B* *_respecte_* le contrat, {cr}
+// l'implémentation de *B* peut être modifié {cr}
+// sans impact sur le composant *A*.
+
+// image::images/flexibility-bound2interface_4.svg[{image_options}]
+// --
+
+
+// [.right-column]
+// [.center]
+// --
+// Mais si le contrat est *modifié*, {cr}
+// l'implémentation de *B* doit être modifiée, {cr}
+// et *A* doit s'adapter.
+
+// image::images/flexibility-bound2interface_5.svg[{image_options}]
+// --
+
+
+// ifdef::mode_slide[]
+// [transition=fade]
+// === Découplage et abstraction > Illustration
+// endif::[]
+
+// ifndef::mode_slide[*Illustration étape {counter:CONTRAT_SCHEMA_STEP}*]
+
+
+// [.center]
+// --
+// ****
+// Pour être découplés, les composants {cr}
+// ne doivent tenir compte {cr}
+// *que* des _abstractions_.
+// ****
+
+// image::images/flexibility-bound2interface_5bis.svg[{image_options}]
+// --
+
+// [.end.background]
+// [.center]
+// == Cohésion, Cohérence et Abstraction
+
+// [.left-column-2-3]
+// --
+// * Orientation de la conception
+// ** Renforcer la cohésion du module
+// ** Diminuer le couplage entre modules
+// ** Accroître l'abstraction de l'interface
+// * Bonne conception => Minimisation 
+// ** De la **connaissance** 
+// *** Pour la compréhension, donc la conception
+// ** Des efforts pour faire **évoluer** la conception
+// --
+
+// [%step]
+// [.right-column-1-3]
+// --
+// * => Éviter 
+// ** les effets de bords 
+// ** et réactions en chaîne
+// [.center]
+
+// image::images/reaction_en_chaine.gif[]
+// --
+
+
+
+// end::content[]

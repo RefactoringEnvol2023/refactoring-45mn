@@ -42,7 +42,7 @@ C'est la compréhension qui compte.
 [.center]
 Comparer
 
-[.left-column.huge]
+[.left-column.big]
 [source,python,attributes]
 ----
 if p.has_ha():
@@ -50,7 +50,7 @@ if p.has_ha():
     bd.call_mc()
 ----
 
-[.fragment.right-column.huge]
+[.fragment.right-column.big]
 [source,python,attributes]
 ----
 if passenger.has_heart_attack():
@@ -60,7 +60,7 @@ if passenger.has_heart_attack():
 
 [.reset-column]
 [.fragment]
-Vous *devez* le plus *explicite* possible.
+Vous *devez* être le plus *explicite* possible.
 
 
 === Facilitez la compréhension !
@@ -498,88 +498,88 @@ session.close();
 ----
 
 
-== Les commentaires comme informations lisibles
+// == Les commentaires comme informations lisibles
 
-ifndef::mode_slide[]
-Les commentaires sont un sujet épineux, sur lequel il un défaut de consensus et une dimension culturelle très forte.
+// ifndef::mode_slide[]
+// Les commentaires sont un sujet épineux, sur lequel il un défaut de consensus et une dimension culturelle très forte.
 
-Dans certains domaines, ils doivent être abondants et plétoriques (spatial, nucléaire, défense)
+// Dans certains domaines, ils doivent être abondants et plétoriques (spatial, nucléaire, défense)
 
-Dans d'autres, il doivent se limiter au strict nécessaire.
+// Dans d'autres, il doivent se limiter au strict nécessaire.
 
-Voici une position neutre dans cette bataille.
-endif::mode_slide[]
+// Voici une position neutre dans cette bataille.
+// endif::mode_slide[]
 
-[%step]
-* Obligatoires
-** Pour les API publiques, partagées
-** Les points d'entrées
-* Expliquer 
-** Ce que fait le code, 
-** Comment l'utiliser, 
-** Parfois la raison d'être,
-** Donner quelques exemples si nécessaire.
-* Attention aux normes 
-** https://gist.github.com/ashishrana160796/4ac492caa9b306eac0adb3716e8b76d3[*pythondoc*].
-** https://docs.oracle.com/en/java/javase/19/docs/specs/javadoc/doc-comment-spec.html[**javadoc**]
-
-
-=== Les commentaires comme code humain
-
-ifndef::mode_slide[]
-Les commentaires sont une forme de code à destination presque exclusive des humains.
-
-Ils n'en reste pas moins une charge de maintenance.
-
-Rien de pire qu'un commentaire qui prend le lecteur à contre sens du code.
-
-endif::mode_slide[]
+// [%step]
+// * Obligatoires
+// ** Pour les API publiques, partagées
+// ** Les points d'entrées
+// * Expliquer 
+// ** Ce que fait le code, 
+// ** Comment l'utiliser, 
+// ** Parfois la raison d'être,
+// ** Donner quelques exemples si nécessaire.
+// * Attention aux normes 
+// ** https://gist.github.com/ashishrana160796/4ac492caa9b306eac0adb3716e8b76d3[*pythondoc*].
+// ** https://docs.oracle.com/en/java/javase/19/docs/specs/javadoc/doc-comment-spec.html[**javadoc**]
 
 
-[.ppt]
-* Même si seulement à destination des humains
-** Les commentaires doivent être **en phase** avec le code.
-** Rien de pire qu'un commentaire contredisant le code
-** => *Maintenance* à assurer
+// === Les commentaires comme code humain
+
+// ifndef::mode_slide[]
+// Les commentaires sont une forme de code à destination presque exclusive des humains.
+
+// Ils n'en reste pas moins une charge de maintenance.
+
+// Rien de pire qu'un commentaire qui prend le lecteur à contre sens du code.
+
+// endif::mode_slide[]
 
 
-ifndef::mode_slide[]
-Le code commenté est très perturbant. Il est impossible de statuer sur son importance.
-Est-il là pour garder un algorithme très important mais pas encore utilisé ? Plus utilisé ? Est-ce une trace d'un futur ? D'un passé ?
-
-Devant toutes ces interrogations, il n'y a pas de pitié à avoir: dès que le code a un statut suffisamment stable, qu'il est partagé à l'extérieur, qu'il passe en recette, qu'il quitte le statut _en développement_, il faut le supprimer.
-
-endif::mode_slide[]
-
-[.ppt]
-* Code commenté
-** Statut *très* temporaire 
-** **Pas de pitié**, à dégager !
-
-=== Code Never Lie, Comment Sometimes Do
-
-[.ppt]
-* Le code ne ment jamais.
-** Les commentaires sont parfois faux.
-** C'est le code qui s'exécute, pas les commentaires.
-* Commentaires symptomatiques
-** Portion de code nécessitant un commentaire d'explication
-*** => Problème de design !
-*** Mauvaise nommage des éléments ?
-*** Mauvaise isolation des fonctions ?
-* Le code doit être *auto-explicatif*
-** Dans l'absolu, il doit pouvoir se passer de commentaires.
+// [.ppt]
+// * Même si seulement à destination des humains
+// ** Les commentaires doivent être **en phase** avec le code.
+// ** Rien de pire qu'un commentaire contredisant le code
+// ** => *Maintenance* à assurer
 
 
-[.flash.background.center]
-[%notitle]
-[{code_size}]
-=== Commentaires suffisants
+// ifndef::mode_slide[]
+// Le code commenté est très perturbant. Il est impossible de statuer sur son importance.
+// Est-il là pour garder un algorithme très important mais pas encore utilisé ? Plus utilisé ? Est-ce une trace d'un futur ? D'un passé ?
 
-Si vous avez besoin d'*améliorer* un *commentaire* {cr}
-pour *mieux expliquer* un _code_, {cr}
-_laissez tomber le commentaire_ {cr} 
-et *améliorez* le _code_ plutôt.
+// Devant toutes ces interrogations, il n'y a pas de pitié à avoir: dès que le code a un statut suffisamment stable, qu'il est partagé à l'extérieur, qu'il passe en recette, qu'il quitte le statut _en développement_, il faut le supprimer.
+
+// endif::mode_slide[]
+
+// [.ppt]
+// * Code commenté
+// ** Statut *très* temporaire 
+// ** **Pas de pitié**, à dégager !
+
+// === Code Never Lie, Comment Sometimes Do
+
+// [.ppt]
+// * Le code ne ment jamais.
+// ** Les commentaires sont parfois faux.
+// ** C'est le code qui s'exécute, pas les commentaires.
+// * Commentaires symptomatiques
+// ** Portion de code nécessitant un commentaire d'explication
+// *** => Problème de design !
+// *** Mauvaise nommage des éléments ?
+// *** Mauvaise isolation des fonctions ?
+// * Le code doit être *auto-explicatif*
+// ** Dans l'absolu, il doit pouvoir se passer de commentaires.
+
+
+// [.flash.background.center]
+// [%notitle]
+// [{code_size}]
+// === Commentaires suffisants
+
+// Si vous avez besoin d'*améliorer* un *commentaire* {cr}
+// pour *mieux expliquer* un _code_, {cr}
+// _laissez tomber le commentaire_ {cr} 
+// et *améliorez* le _code_ plutôt.
 
 
 [.end.background]
