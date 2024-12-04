@@ -31,6 +31,10 @@ Licence https://creativecommons.org/licenses/by-nc/4.0/deed.fr[CC by-nc 4.0]
 
 == Plan
 
+Résumé de la journée Agile 2024 
+
+https://refactoringenvol2023.github.io/refactoring/#/
+
 [.simple]
 * Introduction au refactoring
 * Voyage à l'intérieur du cerveau
