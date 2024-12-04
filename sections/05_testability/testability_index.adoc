@@ -644,10 +644,10 @@ Given -> When -> Then -> Verify
 ****
 --
 
-// ifdef::mode_slide[=== Test de caractérisation > Exemple]
+ifdef::mode_slide[=== Test de caractérisation > Exemple]
 
-// [.center]
-// image::images/testability-approval.svg[]
+[.center]
+image::images/testability-approval.svg[]
 
 // ifdef::mode_slide[=== Test de caractérisation > Exemple]
 
