@@ -31,6 +31,8 @@ Licence https://creativecommons.org/licenses/by-nc/4.0/deed.fr[CC by-nc 4.0]
 
 == Plan
 
+https://refactoringenvol2023.github.io/refactoring-45mn/#/
+
 Résumé de la journée Agile 2024 
 
 https://refactoringenvol2023.github.io/refactoring/#/
